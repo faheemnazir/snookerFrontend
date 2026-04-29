@@ -1,5 +1,5 @@
 import React from "react";
-import { MapPin, Phone, Share2 } from "lucide-react";
+import { MapPin, Phone, Share2, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -19,7 +19,7 @@ const Footer = () => {
         {/* Links */}
         <div>
           <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-          <ul className="space-y-2 text-xl" >
+          <ul className="space-y-2 text-xl">
             <li className="hover:text-green-500 cursor-pointer">Home</li>
             <li className="hover:text-green-500 cursor-pointer">About</li>
             <li className="hover:text-green-500 cursor-pointer">Contact</li>
@@ -40,6 +40,16 @@ const Footer = () => {
             <span>Srinagar, India</span>
           </div>
 
+          {/* Email */}
+          <a
+            href="mailto:mudasirashiq@gmail.com"
+            className="flex items-center text-xl gap-2 mb-3 hover:text-green-500 transition"
+          >
+            <Mail size={16} />
+            mudasirashiq107@gmail.com
+          </a>
+
+          {/* Instagram */}
           <a
             href="https://www.instagram.com/thesnookeracademy/"
             target="_blank"
@@ -59,9 +69,9 @@ const Footer = () => {
         </p>
 
         <p className="text-gray-500">
-          Developed by{" "}
+          Designed and Developed by{" "}
           <a
-            href="https://daneenalmajaz.in" // replace with actual link
+            href="https://daneenalmajaz.in"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-green-500 transition"

@@ -1,36 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Contact = () => {
+  const [form, setForm] = useState({
+    name: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const text = encodeURIComponent(
+      `Hi, I'm ${form.name}\n\n${form.message}`
+    );
+
+    const whatsappURL = `https://wa.me/919858347754?text=${text}`;
+
+    window.open(whatsappURL, "_blank");
+  };
+
   return (
     <div className="bg-black text-white px-6 py-20">
-
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
 
         {/* Form */}
         <div>
           <h2 className="text-3xl font-semibold mb-6">Contact Us</h2>
 
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="name"
               placeholder="Your Name"
-              className="w-full text-xl p-3 bg-[#0f0f0f] border border-gray-800 rounded-xl focus:border-green-500 outline-none"
-            />
-
-            <input
-              type="email"
-              placeholder="Your Email"
+              value={form.name}
+              onChange={handleChange}
+              required
               className="w-full text-xl p-3 bg-[#0f0f0f] border border-gray-800 rounded-xl focus:border-green-500 outline-none"
             />
 
             <textarea
+              name="message"
               placeholder="Your Message"
               rows="5"
+              value={form.message}
+              onChange={handleChange}
+              required
               className="w-full text-xl p-3 bg-[#0f0f0f] border border-gray-800 rounded-xl focus:border-green-500 outline-none"
             />
 
-            <button className="bg-green-500 text-xl hover:bg-green-600 text-black px-6 py-3 rounded-xl font-semibold">
-              Send Message
+            <button
+              type="submit"
+              className="bg-green-500 text-xl hover:bg-green-600 text-black px-6 py-3 rounded-xl font-semibold"
+            >
+              Send via WhatsApp
             </button>
           </form>
         </div>
@@ -47,14 +72,12 @@ const Contact = () => {
             📍 Srinagar, Jammu & Kashmir
           </p>
 
-          {/* Map */}
           <div className="w-full h-[300px] rounded-2xl overflow-hidden border border-gray-800">
             <iframe
               src="https://www.google.com/maps?q=34.0694626,74.8173082&z=17&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}
-              allowFullScreen=""
               loading="lazy"
             ></iframe>
           </div>

@@ -179,35 +179,38 @@ const CoursesPage = () => {
         </section>
 
         {/* MODAL */}
-        {open && (
-          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-            <div className="bg-[#111] p-8 rounded-2xl max-w-md w-full text-center border border-gray-800">
-              <h2 className="text-2xl mb-4">Contact to Enroll</h2>
-              <p className="text-gray-400 mb-6 text-xl">
-                Call or message to reserve your session or get more details
-                about the programs.
-              </p>
+      {/* MODAL */}
+{open && (
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div className="bg-[#111] p-8 rounded-2xl max-w-md w-full text-center border border-gray-800">
+      <h2 className="text-2xl mb-4">Connect on WhatsApp</h2>
 
-              <div className="text-2xl mb-6 text-green-500">
-                +91 7000000000
-              </div>
+      <p className="text-gray-400 mb-6 text-xl">
+        Chat with us directly on WhatsApp to book your session or ask any questions.
+      </p>
 
-              <a
-                href="tel:+917000000000"
-                className="block w-full text-xl py-3 bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition mb-4"
-              >
-                Call Now
-              </a>
+      <div className="text-2xl mb-6 text-green-500">
+        +91 98583 47754
+      </div>
 
-              <button
-                onClick={() => setOpen(false)}
-                className="text-gray-400 hover:text-white text-xl"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+      <a
+        href="https://wa.me/919858347754"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full text-xl py-3 bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition mb-4"
+      >
+        Chat on WhatsApp
+      </a>
+
+      <button
+        onClick={() => setOpen(false)}
+        className="text-gray-400 hover:text-white text-xl"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
       </div>
     
   );
