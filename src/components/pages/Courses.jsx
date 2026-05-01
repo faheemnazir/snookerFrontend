@@ -179,14 +179,21 @@ const CoursesPage = () => {
         </section>
 
         {/* MODAL */}
-      {/* MODAL */}
+     {/* MODAL */}
 {open && (
-  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-    <div className="bg-[#111] p-8 rounded-2xl max-w-md w-full text-center border border-gray-800">
+  <div
+    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+    onClick={() => setOpen(false)}
+  >
+    <div
+      className="bg-[#111] p-8 rounded-2xl max-w-md w-full text-center border border-gray-800"
+      onClick={(e) => e.stopPropagation()}
+    >
       <h2 className="text-2xl mb-4">Connect on WhatsApp</h2>
 
       <p className="text-gray-400 mb-6 text-xl">
-        Chat with us directly on WhatsApp to book your session or ask any questions.
+        Chat with us directly on WhatsApp to book your session or ask any
+        questions.
       </p>
 
       <div className="text-2xl mb-6 text-green-500">
@@ -211,6 +218,7 @@ const CoursesPage = () => {
     </div>
   </div>
 )}
+
       </div>
     
   );

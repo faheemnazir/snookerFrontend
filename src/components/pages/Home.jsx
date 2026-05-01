@@ -28,7 +28,7 @@ const Hero = () => (
       {/* NEW COMPACT INFO STRIP */}
       <div className="flex flex-wrap justify-center gap-4 text-xs md:text-sm text-gray-400 mb-5">
         <span className="px-3 py-1 border text-xl border-gray-700 rounded-full">
-          5 Professional Tables
+          Professional Tables
         </span>
         <span className="px-3 py-1 border text-xl border-gray-700 rounded-full">
           Calm Environment

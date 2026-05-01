@@ -32,21 +32,21 @@ const Footer = () => {
 
           <div className="flex text-xl items-center gap-2 mb-3">
             <Phone size={16} />
-            <span>098583 47754</span>
+            <span> Phone No. : 098583 47754</span>
           </div>
 
           <div className="flex text-xl items-center gap-2 mb-3">
-            <MapPin size={16} />
-            <span>Srinagar, India</span>
+            <MapPin size={21} />
+            <span> Address : Rajabagh opposite silk factory, Srinagar,Kashmir</span>
           </div>
 
           {/* Email */}
           <a
             href="mailto:mudasirashiq@gmail.com"
-            className="flex items-center text-xl gap-2 mb-3 hover:text-green-500 transition"
+            className="flex items-center text-lg gap-2 mb-3 hover:text-green-500 transition"
           >
-            <Mail size={16} />
-            mudasirashiq107@gmail.com
+            <Mail size={16}  />
+           Email: mudasirashiq107@gmail.com
           </a>
 
           {/* Instagram */}

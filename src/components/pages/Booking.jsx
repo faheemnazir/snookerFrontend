@@ -119,58 +119,66 @@ const BookingPage = () => {
       </div>
 
       {/* BOOKING MODAL */}
-      {open && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4">
-          <div className="bg-[#111] p-8 rounded-2xl max-w-md w-full border border-gray-800">
-            <h2 className="text-3xl mb-4 text-center">Complete Booking</h2>
+      {/* BOOKING MODAL */}
+{open && (
+  <div
+    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4"
+    onClick={() => setOpen(false)}
+  >
+    <div
+      className="bg-[#111] p-8 rounded-2xl max-w-md w-full border border-gray-800"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h2 className="text-3xl mb-4 text-center">Complete Booking</h2>
 
-            <p className="text-gray-400 text-xl text-center mb-6">
-              {type === "premium" ? "Premium" : "Regular"} • {selected?.hours} hr • ₹{selected?.total}
-            </p>
+      <p className="text-gray-400 text-xl text-center mb-6">
+        {type === "premium" ? "Premium" : "Regular"} •{" "}
+        {selected?.hours} hr • ₹{selected?.total}
+      </p>
 
-            <form className="space-y-4">
-              <input
-                type="text"
-                placeholder="Your Name"
-                className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-              />
+      <form className="space-y-4">
+        <input
+          type="text"
+          placeholder="Your Name"
+          className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+        />
 
-              <input
-                type="tel"
-                placeholder="Phone Number"
-                className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-              />
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+        />
 
-              <input
-                type="date"
-                className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-              />
+        <input
+          type="date"
+          className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+        />
 
-              <select className="w-full p-3 rounded-lg text-xl bg-black border border-gray-700 text-white outline-none focus:border-green-500">
-                <option>Select Time Slot</option>
-                <option>Morning</option>
-                <option>Afternoon</option>
-                <option>Evening</option>
-                <option>Night</option>
-              </select>
+        <select className="w-full p-3 rounded-lg text-xl bg-black border border-gray-700 text-white outline-none focus:border-green-500">
+          <option>Select Time Slot</option>
+          <option>Morning</option>
+          <option>Afternoon</option>
+          <option>Evening</option>
+          <option>Night</option>
+        </select>
 
-              <button
-                type="button"
-                className="w-full py-3 text-xl bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition"
-              >
-                Confirm Booking
-              </button>
-            </form>
+        <button
+          type="button"
+          className="w-full py-3 text-xl bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition"
+        >
+          Confirm Booking
+        </button>
+      </form>
 
-            <button
-              onClick={() => setOpen(false)}
-              className="mt-4 text-xl text-gray-400 hover:text-white w-full text-center"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+      <button
+        onClick={() => setOpen(false)}
+        className="mt-4 text-xl text-gray-400 hover:text-white w-full text-center"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+)}
     </div>
     </div>
 
