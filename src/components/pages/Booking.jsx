@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/logo.png"
+import {
+  initiateBooking,
+  getAllTables,
+   getAllSlots,
+  verifyPayment,
+} from "../../Services/api"
 
 const premiumRates = [
   { hours: 1, rate: 600 },
@@ -17,9 +23,263 @@ const BookingPage = () => {
   const [type, setType] = useState("premium");
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
+const [tables, setTables] = useState([]);
+const [slots, setSlots] = useState([]);
+
+const [error, setError] = useState("");
+
+const [loading, setLoading] = useState(false);
+
+const [formData, setFormData] = useState({
+  tableId: "",
+  slotId: "",
+  guestName: "",
+  guestEmail: "",
+  guestPhone: "",
+  bookingDate: "",
+});
 
   const data = type === "premium" ? premiumRates : regularRates;
   const baseRate = type === "premium" ? 600 : 480;
+
+
+useEffect(() => {
+  fetchTables();
+   fetchSlots();
+}, [type]);
+
+const fetchTables = async () => {
+  try {
+    const response = await getAllTables(type);
+console.log(response)
+
+    setTables(response);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+const fetchSlots = async () => {
+  try {
+    const response = await getAllSlots();
+
+    console.log("SLOTS:", response);
+
+    if (Array.isArray(response)) {
+      setSlots(response);
+    } else {
+      setSlots([]);
+    }
+
+  } catch (err) {
+    console.log(err);
+    setSlots([]);
+  }
+};
+
+
+
+const handleChange = (e) => {
+  setFormData({
+    ...formData,
+    [e.target.name]: e.target.value,
+  });
+
+  setError("");
+};
+
+const validateForm = () => {
+  if (!formData.guestName.trim()) {
+    setError("Name is required");
+    return false;
+  }
+
+  const phoneRegex = /^[0-9]{10}$/;
+
+  if (!phoneRegex.test(formData.guestPhone)) {
+    setError("Phone number must be exactly 10 digits");
+    return false;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(formData.guestEmail)) {
+    setError("Enter a valid email");
+    return false;
+  }
+
+  if (!formData.bookingDate) {
+    setError("Please select booking date");
+    return false;
+  }
+
+  if (!formData.tableId) {
+    setError("Please select a table");
+    return false;
+  }
+
+if (!formData.slotId) {
+  setError("Please select a time slot");
+  return false;
+}
+
+  return true;
+};
+
+
+const loadRazorpaySDK = () => {
+  return new Promise((resolve) => {
+    if (window.Razorpay) {
+      resolve(true);
+      return;
+    }
+
+    const script = document.createElement("script");
+
+    script.src =
+      "https://checkout.razorpay.com/v1/checkout.js";
+
+    script.onload = () => resolve(true);
+
+    script.onerror = () => resolve(false);
+
+    document.body.appendChild(script);
+  });
+};
+
+
+
+
+
+
+
+const handleSubmit = async () => {
+  if (!validateForm()) return;
+
+  try {
+    setLoading(true);
+
+    // Load Razorpay SDK
+    const isLoaded = await loadRazorpaySDK();
+
+    if (!isLoaded) {
+      setError("Razorpay SDK failed to load");
+      return;
+    }
+
+    // Step 1 → Create booking
+    const response = await initiateBooking({
+      tableId: Number(formData.tableId),
+      slotId: Number(formData.slotId),
+      guestName: formData.guestName,
+      guestEmail: formData.guestEmail,
+      guestPhone: formData.guestPhone,
+      bookingDate: formData.bookingDate,
+    });
+
+    console.log("BOOKING RESPONSE:", response);
+
+
+    // Step 2 → Open Razorpay
+    const options = {
+     key: import.meta.env.VITE_RAZORPAY_KEY,
+
+      amount: response.amount * 100,
+
+      currency: response.currency || "INR",
+
+      name: "Snooker Club",
+
+      description: `${type} Table Booking`,
+
+      order_id: response.razorpayOrderId,
+
+handler: async function (paymentResponse) {
+
+  try {
+
+    console.log("PAYMENT SUCCESS:", paymentResponse);
+
+    // Verify payment with backend
+    const verifyResponse = await verifyPayment({
+      bookingId: response.bookingId,
+
+      razorpayOrderId:
+        paymentResponse.razorpay_order_id,
+
+      razorpayPaymentId:
+        paymentResponse.razorpay_payment_id,
+
+      razorpaySignature:
+        paymentResponse.razorpay_signature,
+    });
+
+    console.log("VERIFY RESPONSE:", verifyResponse);
+
+    alert("Booking Confirmed Successfully!");
+
+    setOpen(false);
+
+    // Optional reset
+    setFormData({
+      tableId: "",
+      slotId: "",
+      guestName: "",
+      guestEmail: "",
+      guestPhone: "",
+      bookingDate: "",
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    alert(
+      err.response?.data ||
+      "Payment verification failed"
+    );
+  }
+},
+
+
+
+      prefill: {
+        name: formData.guestName,
+        email: formData.guestEmail,
+        contact: formData.guestPhone,
+      },
+
+      theme: {
+        color: "#22c55e",
+      },
+
+      modal: {
+        ondismiss: function () {
+          console.log("Payment popup closed");
+        },
+      },
+    };
+
+    const razorpay = new window.Razorpay(options);
+
+    razorpay.open();
+
+  } catch (err) {
+
+    console.log(err);
+
+    setError(
+      err.response?.data?.message ||
+      "Booking failed"
+    );
+
+  } finally {
+
+    setLoading(false);
+
+  }
+};
 
   return (
 <div className="bg-black">
@@ -117,9 +377,9 @@ const BookingPage = () => {
           );
         })}
       </div>
-
+      
       {/* BOOKING MODAL */}
-      {/* BOOKING MODAL */}
+      
 {open && (
   <div
     className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4"
@@ -132,42 +392,97 @@ const BookingPage = () => {
       <h2 className="text-3xl mb-4 text-center">Complete Booking</h2>
 
       <p className="text-gray-400 text-xl text-center mb-6">
+{error && (
+  <div className="mb-4 bg-red-500/10 border border-red-500 text-red-400 text-sm rounded-lg p-3 text-center">
+    {error}
+  </div>
+)}
         {type === "premium" ? "Premium" : "Regular"} •{" "}
         {selected?.hours} hr • ₹{selected?.total}
       </p>
 
       <form className="space-y-4">
         <input
-          type="text"
-          placeholder="Your Name"
-          className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-        />
+  type="text"
+  name="guestName"
+  placeholder="Your Name"
+  value={formData.guestName}
+  onChange={handleChange}
+  className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+/>
 
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-        />
+<input
+  type="tel"
+  name="guestPhone"
+  placeholder="Phone Number"
+  value={formData.guestPhone}
+  onChange={handleChange}
+  className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+/>
 
-        <input
-          type="date"
-          className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-        />
+    <input
+  type="date"
+  name="bookingDate"
+  value={formData.bookingDate}
+  onChange={handleChange}
+  className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+/>
+         
+         <input
+  type="email"
+  name="guestEmail"
+  placeholder="Email Address"
+  value={formData.guestEmail}
+  onChange={handleChange}
+  className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+/>
 
-        <select className="w-full p-3 rounded-lg text-xl bg-black border border-gray-700 text-white outline-none focus:border-green-500">
-          <option>Select Time Slot</option>
-          <option>Morning</option>
-          <option>Afternoon</option>
-          <option>Evening</option>
-          <option>Night</option>
-        </select>
+<select
+  name="tableId"
+  value={formData.tableId}
+  onChange={handleChange}
+  className="w-full p-3 rounded-lg text-xl bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+>
+  <option value="">Select Table</option>
+{Array.isArray(tables) &&
+  tables.map((table) => (
+    <option key={table.id} value={table.id}>
+      {table.tableName}
+    </option>
+))}
+  
+</select>
 
-        <button
-          type="button"
-          className="w-full py-3 text-xl bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition"
-        >
-          Confirm Booking
-        </button>
+
+
+<select
+  name="slotId"
+  value={formData.slotId}
+  onChange={handleChange}
+  className="w-full p-3 rounded-lg text-xl bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+>
+  <option value="">Select Time Slot</option>
+
+  {Array.isArray(slots) &&
+    slots.map((slot) => (
+      <option key={slot.id} value={slot.id}>
+        {slot.slotName}
+      </option>
+    ))}
+</select>
+
+
+
+
+
+       <button
+  type="button"
+  onClick={handleSubmit}
+  disabled={loading}
+  className="w-full py-3 text-xl bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition disabled:opacity-50"
+>
+  {loading ? "Processing..." : "Confirm Booking"}
+</button>
       </form>
 
       <button
