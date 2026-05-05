@@ -9,18 +9,20 @@ const API = axios.create({
 });
 
 // Attach token automatically
-API.interceptors.request.use(
-  (config) => {
-    const token = sessionStorage.getItem("token");
+API.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem("token");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  console.log("➡️ API CALL:", config.url);
+  console.log("➡️ TOKEN:", token);
 
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  console.log("➡️ HEADERS:", config.headers);
+
+  return config;
+});
 
 
 //login
@@ -148,27 +150,7 @@ export const updateTable = async (id, tableData) => {
 
 
 
-// GET TABLE BY ID
-export const getTableById = async (id) => {
-  try {
-    const response = await API.get(
-      `/api/tables/${id}`,
-      {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-        },
-      }
-    );
 
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Fetch Table Error:",
-      error.response?.data || error.message
-    );
-    throw error;
-  }
-};
 
 
 
@@ -176,20 +158,17 @@ export const getTableById = async (id) => {
 //  fetch all tables
 export const getAllTables = async (type) => {
   try {
-    const response = await API.get(
-      `/api/tables?type=${type.toUpperCase()}`,{
-        headers:{
-          "ngrok-skip-browser-warning":"true"
-        },
-      }
-    );
+    const response = await API.get(`/api/tables?type=${type.toUpperCase()}`, {
+      headers: {
+        "ngrok-skip-browser-warning": "true",
+      },
+    });
 
     return response.data;
   } catch (error) {
-    console.error(
-      "Fetch Tables Error:",
-      error.response?.data || error.message
-    );
+    console.log("❌ FULL ERROR:", error);
+    console.log("❌ RESPONSE DATA:", error.response?.data);
+    console.log("❌ STATUS:", error.response?.status);
 
     throw error;
   }
@@ -299,7 +278,7 @@ export const removeSlotFromTable = async (tableId, slotId) => {
 export const deleteTimeSlot = async (id) => {
   try {
     const response = await API.delete(
-      `/api/admin/deleteTimeSlotById/${id}`,
+      `/api/admin/deletTimeSlotById/${id}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -316,11 +295,6 @@ export const deleteTimeSlot = async (id) => {
     throw error;
   }
 };
-
-
-
-
-
 
 
 

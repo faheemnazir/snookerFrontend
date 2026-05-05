@@ -8,13 +8,13 @@ const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
-  });
+const [formData, setFormData] = useState({
+  username: "",
+  email: "",
+  password: "",
+  phone: "",
+  role: "ROLE_ADMIN", // or ROLE_USER depending on backend
+});
 
   const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
@@ -35,21 +35,35 @@ const RegisterPage = () => {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const res = await registerAdmin(formData);
+ try {
+  const res = await registerAdmin(formData);
 
-      console.log(res); // backend returns string
+  console.log("REGISTER RESPONSE:", res);
 
-      alert("Registration successful!");
+  // If backend returns a success string
+  if (typeof res === "string" && res.toLowerCase().includes("success")) {
+    alert("Registration successful!");
+    navigate("/login");
+  } else {
+    // fallback in case backend changes response format
+    alert("Registration completed. Please login.");
+    navigate("/login");
+  }
 
-      // redirect to login
-      navigate("/login");
-    } catch (err) {
-      console.error("Registration failed", err);
-      alert("Registration failed");
-    } finally {
-      setLoading(false);
-    }
+} catch (err) {
+  console.error("FULL ERROR:", err);
+
+  const errorMessage =
+    err.response?.data?.message ||  
+    err.response?.data ||           
+    err.message ||                  
+    "Registration failed";
+
+  alert(errorMessage);
+
+} finally {
+  setLoading(false);
+}
   };
 
   return (
@@ -93,28 +107,7 @@ const RegisterPage = () => {
 
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
-
-            {/* First + Last Name */}
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                placeholder="First Name"
-                className="bg-black/60 border border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none"
-              />
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                placeholder="Last Name"
-                className="bg-black/60 border border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none"
-              />
-            </div>
-
-            {/* Username */}
+  {/* Username */}
             <input
               type="text"
               name="username"
@@ -123,6 +116,18 @@ const RegisterPage = () => {
               placeholder="Username"
               className="w-full bg-black/60 border border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none"
             />
+        
+            <input
+  type="text"
+  name="phone"
+  value={formData.phone}
+  onChange={handleChange}
+  placeholder="Phone Number"
+  className="w-full bg-black/60 border border-gray-700 focus:border-green-500 rounded-xl px-4 py-3 outline-none"
+/>
+            
+
+          
 
             {/* Email */}
             <input

@@ -34,41 +34,31 @@ const Navbar = () => {
 >
     
       {/* ✅ Fixed height for proper vertical alignment */}
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div className="w-full px-6 h-20 flex items-center justify-between">
         
         {/* Logo */}
-        <div className="flex items-center gap-3 cursor-pointer group h-full">
-         <img
-  src={logo}
-  alt="Snooker Club"
-  className={`w-auto object-contain 
-  transition-all duration-500 ease-in-out
-  ${scrolled 
-    ? "h-20 md:h-24"        
-    : "h-28 md:h-37"        
-  }`}
-/>         
-        <NavLink
-        to="/"
-        >
-          <span
-            className={`text-xl md:text-3xl font-semibold tracking-wide transition-all duration-300
-            ${scrolled ? "text-white" : "text-white"}`}
-          >
-            The Snooker Academy
-          </span>
-          </NavLink>
+        <div className="flex items-center gap-3">
+  <NavLink to="/" className="flex items-center gap-3">
+    <img
+      src={logo}
+      alt="Snooker Club"
+      className="h-12 md:h-14 w-auto object-contain"
+    />
 
-        </div>
+    <span className="text-lg md:text-2xl font-semibold tracking-wide text-white leading-none">
+      The Snooker Academy
+    </span>
+  </NavLink>
+</div>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex text-2xl items-center gap-8">
+      <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               className={({ isActive }) =>
-                `relative  text-xl transition-all duration-300 text-xl tracking-wide
+                `relative text-lg transition-all duration-300 tracking-wide
                 ${
                   isActive
                     ? "text-green-400"

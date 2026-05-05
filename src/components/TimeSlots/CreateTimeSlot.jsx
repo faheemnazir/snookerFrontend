@@ -11,35 +11,44 @@ const CreateTimeSlot = () => {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!slotName || hour === "" || minute === "") {
-      return alert("Please fill all fields");
-    }
+  if (!slotName || hour === "" || minute === "") {
+    return alert("Please fill all fields");
+  }
 
-    const payload = {
-      slotName,
-      startTime: {
-        hour: Number(hour),
-        minute: Number(minute),
-        second: 0,
-        nano: 0,
-      },
-    };
+  // ✅ ADD THIS HERE
+  if (hour < 0 || hour > 23 || minute < 0 || minute > 59) {
+    return alert("Invalid time");
+  }
 
-    try {
-      setLoading(true);
-      await createTimeSlot(payload);
-
-      navigate("/admin/slots");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to create slot");
-    } finally {
-      setLoading(false);
-    }
+  const payload = {
+    slotName,
+    startTime: {
+      hour: Number(hour),
+      minute: Number(minute),
+      second: 0,
+      nano: 0,
+    },
   };
+
+  try {
+    setLoading(true);
+    await createTimeSlot(payload);
+
+    navigate("/admin/slots");
+  } catch (err) {
+    console.error(err);
+    alert(
+      err.response?.data ||
+      err.message ||
+      "Failed to create slot"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="space-y-6">

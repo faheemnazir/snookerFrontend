@@ -29,13 +29,14 @@ const handleChange = (e) => {
   e.preventDefault();
 
   try {
-    const res = await loginAdmin(formData);
+   const res = await loginAdmin(formData);
 
-    // store token
-    sessionStorage.setItem("token", res.token);
+console.log("LOGIN RESPONSE:", res);
 
-    // optional: store role (useful later)
-    sessionStorage.setItem("role", res.role);
+sessionStorage.setItem("token", res?.token || res?.data?.token);
+
+
+sessionStorage.setItem("role", res?.role || res?.data?.role);
 
     // redirect
     navigate("/admin");

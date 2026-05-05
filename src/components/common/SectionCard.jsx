@@ -1,16 +1,44 @@
 // components/admin/SectionCard.jsx
 const SectionCard = ({ title, description, children }) => {
   return (
-    <div className="bg-[#111] border border-gray-800 rounded-xl p-6 space-y-4">
+    <div className="
+      relative
+      bg-gradient-to-b from-[#111] to-[#0a0a0a]
+      border border-gray-800/80
+      rounded-2xl
+      p-6 md:p-7
+      space-y-5
+      shadow-lg shadow-black/40
+      hover:shadow-green-500/10
+      hover:border-green-500/30
+      transition-all duration-300
+      backdrop-blur-sm
+      group
+    ">
 
-      <div>
-        <h2 className="text-xl font-semibold">{title}</h2>
+      {/* subtle glow effect */}
+      <div className="
+        absolute inset-0 rounded-2xl
+        bg-green-500/0 group-hover:bg-green-500/5
+        transition duration-300
+        pointer-events-none
+      " />
+
+      {/* HEADER */}
+      <div className="relative z-10">
+        <h2 className="text-xl md:text-2xl font-semibold tracking-wide">
+          {title}
+        </h2>
+
         {description && (
-          <p className="text-gray-400 text-sm mt-1">{description}</p>
+          <p className="text-gray-400 text-sm mt-1 leading-relaxed">
+            {description}
+          </p>
         )}
       </div>
 
-      <div className="border-t border-gray-800 pt-4">
+      {/* CONTENT */}
+      <div className="relative z-10 border-t border-gray-800/80 pt-4">
         {children}
       </div>
 

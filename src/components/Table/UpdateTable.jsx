@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TableForm from "./TableForm";
-import { updateTable, getTableById } from "../../Services/api";
+import { updateTable, getAllTables } from "../../Services/api";
 import SectionCard from "../common/SectionCard";
 
 const UpdateTable = () => {
@@ -12,30 +12,57 @@ const UpdateTable = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchTable = async () => {
-      try {
-        const res = await getTableById(id);
-        setTable(res);
-      } catch (err) {
-        console.error(err);
-        alert("Failed to load table");
-      } finally {
-        setLoading(false);
-      }
-    };
+   const fetchTable = async () => {
+  try {
+    // fetch both types (since we don't know which one it is)
+    const regularTables = await getAllTables("REGULAR");
+    const premiumTables = await getAllTables("PREMIUM");
+
+    const allTables = [...regularTables, ...premiumTables];
+
+ 
+    const found = allTables.find((t) => t.id === Number(id));
+
+    setTable(found || null);
+
+  } catch (err) {
+    console.error("FETCH ERROR:", err);
+
+    alert(
+      err.response?.data ||
+      err.message ||
+      "Failed to load table"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchTable();
   }, [id]);
 
-  const handleUpdate = async (data) => {
-    try {
-      await updateTable(id, data);
-      navigate("/admin/tables");
-    } catch (err) {
-      console.error(err);
-      alert("Update failed");
-    }
-  };
+const handleUpdate = async (data) => {
+  try {
+    const payload = {
+      ...table,   
+      ...data,    
+      id: Number(id), 
+    };
+
+    await updateTable(id, payload);
+
+    navigate("/admin/tables");
+
+  } catch (err) {
+    console.error("UPDATE ERROR:", err);
+
+    alert(
+      err.response?.data ||
+      err.message ||
+      "Update failed"
+    );
+  }
+};
 
   if (loading) {
     return (

@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
+import logo from "../../assets/logo.png"; // 👈 add this
 
 const Dashboard = () => {
   const links = [
@@ -10,9 +11,18 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="bg-black text-white min-h-screen">
 
-      <div className="pt-28 px-6 max-w-7xl mx-auto space-y-8">
+      {/* ✅ WATERMARK (same as booking page) */}
+      <img
+        src={logo}
+        className="fixed opacity-5 w-[900px] left-1/2 top-1/2 
+        -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
+        alt="watermark"
+      />
+
+      {/* CONTENT WRAPPER */}
+      <div className="relative z-10 pt-28 px-6 max-w-7xl mx-auto space-y-8">
 
         {/* HEADER */}
         <div className="border-b border-gray-800 pb-6">

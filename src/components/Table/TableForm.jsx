@@ -12,6 +12,21 @@ const TableForm = ({ onSubmit, initialData = {}, mode = "create" }) => {
   const [allSlots, setAllSlots] = useState([]);
   const [images, setImages] = useState([]);
 
+
+useEffect(() => {
+  if (initialData && Object.keys(initialData).length > 0) {
+    setFormData({
+      tableName: initialData.tableName || "",
+      tableType: initialData.tableType || "REGULAR",
+      availableSlots: initialData.availableSlots || [],
+      availableTiers: initialData.availableTiers || [],
+    });
+  }
+}, []); // 🔥 RUN ONLY ONCE
+
+
+
+
   useEffect(() => {
     const fetchSlots = async () => {
       try {
@@ -102,7 +117,7 @@ const TableForm = ({ onSubmit, initialData = {}, mode = "create" }) => {
             className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition"
           >
             <option value="REGULAR">REGULAR</option>
-            <option value="VIP">VIP</option>
+            <option value="PREMIUM">PREMIUM</option>
           </select>
         </div>
       </div>
@@ -201,7 +216,7 @@ const TableForm = ({ onSubmit, initialData = {}, mode = "create" }) => {
           <input
             type="file"
             multiple
-            onChange={(e) => setImages(e.target.files)}
+            onChange={(e) => setImages([...e.target.files])}
             className="text-gray-400 text-sm"
           />
         </div>

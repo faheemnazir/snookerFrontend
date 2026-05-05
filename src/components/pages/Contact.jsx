@@ -4,6 +4,7 @@ const Contact = () => {
   const [form, setForm] = useState({
     name: "",
     message: "",
+      queryType: "Courses",
   });
 
   const handleChange = (e) => {
@@ -14,7 +15,7 @@ const Contact = () => {
     e.preventDefault();
 
     const text = encodeURIComponent(
-      `Hi, I'm ${form.name}\n\n${form.message}`
+      `Hi, I'm ${form.name}\n\n${form.message} and I want to know about ${form.queryType} `
     );
 
     const whatsappURL = `https://wa.me/919858347754?text=${text}`;
@@ -40,6 +41,21 @@ const Contact = () => {
               required
               className="w-full text-xl p-3 bg-[#0f0f0f] border border-gray-800 rounded-xl focus:border-green-500 outline-none"
             />
+            <select
+  name="queryType"
+  value={form.queryType}
+  onChange={handleChange}
+  className="w-full text-xl p-3 bg-[#0f0f0f] border border-gray-800 rounded-xl focus:border-green-500 outline-none text-white appearance-none cursor-pointer"
+>
+  <option value="Courses">Courses</option>
+  <option value="Booking">Booking</option>
+  <option value="Other">Other</option>
+</select>
+
+
+
+
+
 
             <textarea
               name="message"

@@ -7,9 +7,24 @@ const TablesList = () => {
   const [tables, setTables] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getAllTables("REGULAR").then(setTables);
-  }, []);
+useEffect(() => {
+  const fetchTables = async () => {
+    try {
+      const res = await getAllTables("REGULAR");
+      setTables(res);
+    } catch (err) {
+      console.error("FETCH ERROR:", err);
+
+      alert(
+        err.response?.data ||
+        err.message ||
+        "Failed to load tables"
+      );
+    }
+  };
+
+  fetchTables();
+}, []);
 
   return (
     <div className="space-y-6">
@@ -40,7 +55,23 @@ const TablesList = () => {
                 </button>
 
                 <button
-                  onClick={() => deleteTable(t.id)}
+                  onClick={async () => {
+                    try {
+                      await deleteTable(t.id);
+
+                      // ✅ remove from UI instantly
+                      setTables((prev) => prev.filter((table) => table.id !== t.id));
+
+                    } catch (err) {
+                      console.error("DELETE ERROR:", err);
+
+                      alert(
+                        err.response?.data ||
+                        err.message ||
+                        "Failed to delete table"
+                      );
+                    }
+                  }}
                   className="flex-1 border border-gray-700 py-2 rounded-xl text-sm"
                 >
                   Delete

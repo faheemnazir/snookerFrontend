@@ -23,17 +23,14 @@ const TimeSlotsList = () => {
     fetchSlots();
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this slot?")) return;
-
-    try {
-      await deleteTimeSlot(id);
-      setSlots((prev) => prev.filter((s) => s.id !== id));
-    } catch (err) {
-      console.error(err);
-      alert("Delete failed");
-    }
-  };
+ const handleDelete = async (id) => {
+  try {
+    await deleteTimeSlot(id);
+    setSlots((prev) => prev.filter((s) => s.id !== id));
+  } catch (err) {
+    alert("Delete failed");
+  }
+};
 
   const formatTime = (time) => {
     if (!time) return "";
