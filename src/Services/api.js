@@ -9,20 +9,18 @@ const API = axios.create({
 });
 
 // Attach token automatically
-API.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("token");
+API.interceptors.request.use(
+  (config) => {
+    const token = sessionStorage.getItem("token");
 
-  console.log("➡️ API CALL:", config.url);
-  console.log("➡️ TOKEN:", token);
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  console.log("➡️ HEADERS:", config.headers);
-
-  return config;
-});
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 
 //login
@@ -149,26 +147,23 @@ export const updateTable = async (id, tableData) => {
 };
 
 
-
-
-
-
-
-
 //  fetch all tables
 export const getAllTables = async (type) => {
   try {
-    const response = await API.get(`/api/tables?type=${type.toUpperCase()}`, {
-      headers: {
-        "ngrok-skip-browser-warning": "true",
-      },
-    });
+    const response = await API.get(
+      `/api/tables?type=${type.toUpperCase()}`,{
+        headers:{
+          "ngrok-skip-browser-warning":"true"
+        },
+      }
+    );
 
     return response.data;
   } catch (error) {
-    console.log("❌ FULL ERROR:", error);
-    console.log("❌ RESPONSE DATA:", error.response?.data);
-    console.log("❌ STATUS:", error.response?.status);
+    console.error(
+      "Fetch Tables Error:",
+      error.response?.data || error.message
+    );
 
     throw error;
   }
@@ -196,6 +191,77 @@ export const deleteTable = async (id) => {
     throw error;
   }
 };
+
+
+//TIER
+
+// create Tier
+export const createTier = async (tierData) => {
+  try {
+    const response = await API.post(
+      "/api/admin/tiers",
+      tierData,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Create Tier Error:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+// UPDATE TIER
+export const updateTier = async (id, tierData) => {
+  try {
+    const response = await API.put(`/api/admin/tiers/${id}`, {
+      id: id, // backend expects it in body too (as per swagger)
+      hours: tierData.hours,
+      basePrice: tierData.basePrice,
+      discountPercentage: tierData.discountPercentage,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Update Tier Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+// DELETE TIER
+export const deleteTier = async (id) => {
+  try {
+    const response = await API.delete(`/api/admin/tiers/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Delete Tier Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
+// GET ALL TIERS
+export const getAllTiers = async () => {
+  try {
+    const response = await API.get("/api/admin/tiers");
+    return response.data;
+  } catch (error) {
+    console.error("Get All Tiers Error:", error.response?.data || error.message);
+    throw error;
+  }
+};
+
+
+
 
 
 
@@ -278,7 +344,7 @@ export const removeSlotFromTable = async (tableId, slotId) => {
 export const deleteTimeSlot = async (id) => {
   try {
     const response = await API.delete(
-      `/api/admin/deletTimeSlotById/${id}`,
+      `/api/admin/deleteTimeSlotById/${id}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -295,6 +361,11 @@ export const deleteTimeSlot = async (id) => {
     throw error;
   }
 };
+
+
+
+
+
 
 
 

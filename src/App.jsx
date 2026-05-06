@@ -22,6 +22,7 @@ import UpdateTable from "./components/Table/UpdateTable";
 
 import TimeSlotsList from "./components/TimeSlots/TimeSlotsList";
 import CreateTimeSlot from "./components/TimeSlots/CreateTimeSlot";
+import Tier from "./components/Tier/Tier";
 
 
 
@@ -46,6 +47,10 @@ import CreateTimeSlot from "./components/TimeSlots/CreateTimeSlot";
 //           {/* TIME SLOTS */}
 //           <Route path="slots" element={<TimeSlotsList />} />
 //           <Route path="create-slot" element={<CreateTimeSlot />} />
+
+
+
+// <Route path="create-tier" element={<CreateTier />} />
 //         </Route>
 
 
@@ -74,6 +79,7 @@ function App() {
   <Route path="update/:id" element={<UpdateTable />} />
   <Route path="slots" element={<TimeSlotsList />} />
   <Route path="create-slot" element={<CreateTimeSlot />} />
+   <Route path="tier" element={<Tier />} />
 </Route>
 
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+// import { getAllSlots, getAllTiers } from "../../Services/api";
 import { getAllSlots } from "../../Services/api";
 
 const TableForm = ({ onSubmit, initialData = {}, mode = "create" }) => {
@@ -6,27 +7,26 @@ const TableForm = ({ onSubmit, initialData = {}, mode = "create" }) => {
     tableName: initialData.tableName || "",
     tableType: initialData.tableType || "REGULAR",
     availableSlots: initialData.availableSlots || [],
-    availableTiers: initialData.availableTiers || [],
+    tierId: initialData.tierId || "", // ✅ NEW
   });
 
   const [allSlots, setAllSlots] = useState([]);
+  const [allTiers, setAllTiers] = useState([]); // ✅ NEW
   const [images, setImages] = useState([]);
 
+  // ✅ INIT DATA (only once)
+  useEffect(() => {
+    if (initialData && Object.keys(initialData).length > 0) {
+      setFormData({
+        tableName: initialData.tableName || "",
+        tableType: initialData.tableType || "REGULAR",
+        availableSlots: initialData.availableSlots || [],
+        tierId: initialData.tierId || "", // ✅ NEW
+      });
+    }
+  }, []);
 
-useEffect(() => {
-  if (initialData && Object.keys(initialData).length > 0) {
-    setFormData({
-      tableName: initialData.tableName || "",
-      tableType: initialData.tableType || "REGULAR",
-      availableSlots: initialData.availableSlots || [],
-      availableTiers: initialData.availableTiers || [],
-    });
-  }
-}, []); // 🔥 RUN ONLY ONCE
-
-
-
-
+  // ✅ FETCH SLOTS
   useEffect(() => {
     const fetchSlots = async () => {
       try {
@@ -38,6 +38,20 @@ useEffect(() => {
     };
 
     fetchSlots();
+  }, []);
+
+  // ✅ FETCH TIERS
+  useEffect(() => {
+    const fetchTiers = async () => {
+      try {
+        const res = await getAllTiers();
+        setAllTiers(res);
+      } catch (err) {
+        console.error("Failed to load tiers", err);
+      }
+    };
+
+    fetchTiers();
   }, []);
 
   const handleChange = (e) => {
@@ -63,22 +77,6 @@ useEffect(() => {
         availableSlots: [...formData.availableSlots, slot],
       });
     }
-  };
-
-  const addTier = () => {
-    setFormData({
-      ...formData,
-      availableTiers: [
-        ...formData.availableTiers,
-        { hours: 1, basePrice: 0, discountPercentage: 0 },
-      ],
-    });
-  };
-
-  const updateTier = (index, field, value) => {
-    const updated = [...formData.availableTiers];
-    updated[index][field] = value;
-    setFormData({ ...formData, availableTiers: updated });
   };
 
   const handleSubmit = (e) => {
@@ -150,60 +148,32 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ================= PRICING ================= */}
+      {/* ================= PRICING TIERS (CLEAN DROPDOWN) ================= */}
       <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-5 space-y-4">
-        <div className="flex justify-between items-center">
-          <h3 className="text-lg font-semibold text-white">
-            Pricing Tiers
-          </h3>
+        <h3 className="text-lg font-semibold text-white">
+          Pricing Tier
+        </h3>
 
-          <button
-            type="button"
-            onClick={addTier}
-            className="text-sm text-green-400 hover:text-green-300 transition"
-          >
-            + Add Tier
-          </button>
-        </div>
+        <select
+          name="tierId"
+          value={formData.tierId}
+          onChange={handleChange}
+          className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition"
+        >
+          <option value="">Select a pricing tier</option>
 
-        <div className="space-y-3">
-          {formData.availableTiers.map((tier, i) => (
-            <div
-              key={i}
-              className="grid grid-cols-3 gap-3 bg-[#111] border border-gray-800 p-3 rounded-xl"
-            >
-              <input
-                type="number"
-                value={tier.hours}
-                onChange={(e) =>
-                  updateTier(i, "hours", +e.target.value)
-                }
-                placeholder="Hours"
-                className="bg-transparent outline-none text-white"
-              />
-
-              <input
-                type="number"
-                value={tier.basePrice}
-                onChange={(e) =>
-                  updateTier(i, "basePrice", +e.target.value)
-                }
-                placeholder="Price"
-                className="bg-transparent outline-none text-white"
-              />
-
-              <input
-                type="number"
-                value={tier.discountPercentage}
-                onChange={(e) =>
-                  updateTier(i, "discountPercentage", +e.target.value)
-                }
-                placeholder="% Discount"
-                className="bg-transparent outline-none text-white"
-              />
-            </div>
+          {allTiers.map((tier) => (
+            <option key={tier.id} value={tier.id}>
+              {tier.hours} hr — ₹{tier.basePrice} ({tier.discountPercentage}% off)
+            </option>
           ))}
-        </div>
+        </select>
+
+        {formData.tierId && (
+          <p className="text-xs text-gray-500">
+            Selected tier will be applied to this table
+          </p>
+        )}
       </div>
 
       {/* ================= IMAGES ================= */}

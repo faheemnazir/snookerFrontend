@@ -8,6 +8,7 @@ const Dashboard = () => {
     { name: "Create Table", path: "/admin/create" },
     { name: "Time Slots", path: "/admin/slots" },
     { name: "Create Slot", path: "/admin/create-slot" },
+    { name: "Pricing Tiers", path: "/admin/tier" },
   ];
 
   return (
@@ -30,7 +31,7 @@ const Dashboard = () => {
             Admin Dashboard
           </h1>
           <p className="text-gray-500 mt-2">
-            Manage tables, slots and bookings
+            Manage tables, slots,teirs and bookings
           </p>
         </div>
 

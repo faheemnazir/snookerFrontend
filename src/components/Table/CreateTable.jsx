@@ -12,7 +12,7 @@ const CreateTable = () => {
     const formData = new FormData();
 
 
-    const payload = {
+    const payload = { 
       ...data,
       availableSlots: data.availableSlots.map((s) => s.id),
     };
