@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
@@ -19,47 +19,19 @@ import Dashboard from "./components/pages/Dashboard";
 import TablesList from "./components/Table/TableList";
 import CreateTable from "./components/Table/CreateTable";
 import UpdateTable from "./components/Table/UpdateTable";
-
-import TimeSlotsList from "./components/TimeSlots/TimeSlotsList";
-import CreateTimeSlot from "./components/TimeSlots/CreateTimeSlot";
+import UserManagement from "./components/pages/UserManagement";
+import AllBookings from "./components/Admin/AllBookings";
+import CourseEnrollees from "./components/Admin/CourseEnrollees";
 import Tier from "./components/Tier/Tier";
 
+function AppContent() {
+  const location = useLocation();
+  const isAdminPath = location.pathname.startsWith("/admin");
 
-
-// {/* ADMIN ROUTES (NESTED) */}
-
-//         <Route
-//           path="/admin"
-//           element={
-//             <ProtectedRoute>
-//               <Dashboard />
-//             </ProtectedRoute>
-//           }
-//         >
-//           {/* default dashboard */}
-//           <Route index element={<TablesList />} />
-
-//           {/* TABLES */}
-//           <Route path="tables" element={<TablesList />} />
-//           <Route path="create" element={<CreateTable />} />
-//           <Route path="update/:id" element={<UpdateTable />} />
-
-//           {/* TIME SLOTS */}
-//           <Route path="slots" element={<TimeSlotsList />} />
-//           <Route path="create-slot" element={<CreateTimeSlot />} />
-
-
-
-// <Route path="create-tier" element={<CreateTier />} />
-//         </Route>
-
-
-
-
-function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
+    <>
+      {/* Hide Navbar on Admin */}
+      {!isAdminPath && <Navbar />}
 
       <Routes>
         {/* PUBLIC ROUTES */}
@@ -71,22 +43,41 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* temp test */}
-<Route path="/admin" element={<Dashboard />}>
-  <Route index element={<TablesList />} />
-  <Route path="tables" element={<TablesList />} />
-  <Route path="create" element={<CreateTable />} />
-  <Route path="update/:id" element={<UpdateTable />} />
-  <Route path="slots" element={<TimeSlotsList />} />
-  <Route path="create-slot" element={<CreateTimeSlot />} />
-   <Route path="tier" element={<Tier />} />
-</Route>
+        {/* ADMIN ROUTES */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        >
+          {/* default page */}
+          <Route index element={<TablesList />} />
 
+          {/* TABLES */}
+          <Route path="tables" element={<TablesList />} />
+          <Route path="create" element={<CreateTable />} />
+          <Route path="update/:id" element={<UpdateTable />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="bookings" element={<AllBookings />} />
+          <Route path="enrollments" element={<CourseEnrollees />} />
 
-
+          {/* TIER */}
+          <Route path="tier" element={<Tier />} />
+        </Route>
       </Routes>
 
-      <Footer />
+      {/* Hide Footer on Admin */}
+      {!isAdminPath && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
     </BrowserRouter>
   );
 }

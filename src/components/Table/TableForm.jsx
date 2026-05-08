@@ -1,202 +1,189 @@
 import React, { useEffect, useState } from "react";
-// import { getAllSlots, getAllTiers } from "../../Services/api";
-import { getAllSlots } from "../../Services/api";
+import { getAllTiers } from "../../Services/api";
 
-const TableForm = ({ onSubmit, initialData = {}, mode = "create" }) => {
-  const [formData, setFormData] = useState({
-    tableName: initialData.tableName || "",
-    tableType: initialData.tableType || "REGULAR",
-    availableSlots: initialData.availableSlots || [],
-    tierId: initialData.tierId || "", // ✅ NEW
-  });
-
-  const [allSlots, setAllSlots] = useState([]);
-  const [allTiers, setAllTiers] = useState([]); // ✅ NEW
+const TableForm = ({
+  formData,
+  handleChange,
+  handleSubmit,
+  loading,
+  buttonText,
+}) => {
+  const [tiers, setTiers] = useState([]);
   const [images, setImages] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
 
-  // ✅ INIT DATA (only once)
-  useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      setFormData({
-        tableName: initialData.tableName || "",
-        tableType: initialData.tableType || "REGULAR",
-        availableSlots: initialData.availableSlots || [],
-        tierId: initialData.tierId || "", // ✅ NEW
-      });
-    }
-  }, []);
-
-  // ✅ FETCH SLOTS
-  useEffect(() => {
-    const fetchSlots = async () => {
-      try {
-        const res = await getAllSlots();
-        setAllSlots(res);
-      } catch (err) {
-        console.error("Failed to load slots", err);
-      }
-    };
-
-    fetchSlots();
-  }, []);
-
-  // ✅ FETCH TIERS
+  // 🔥 Fetch tiers from API
   useEffect(() => {
     const fetchTiers = async () => {
       try {
-        const res = await getAllTiers();
-        setAllTiers(res);
+        const data = await getAllTiers();
+        setTiers(data);
       } catch (err) {
-        console.error("Failed to load tiers", err);
+        console.error("Tier fetch failed:", err);
       }
     };
 
     fetchTiers();
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
+  // 🔥 Handle input change safely
+  const onInputChange = (e) => {
+    handleChange(e);
+  };
+
+  // 🔥 Image upload + preview
+  const handleImageUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    setImages(files);
+
+    const previews = files.map((file) =>
+      URL.createObjectURL(file)
+    );
+    setPreviewUrls(previews);
+  };
+
+  // 🔥 Tier toggle
+  const handleTierToggle = (tierId) => {
+    const current = [...(formData.availableTierIds || [])];
+
+    const exists = current.includes(tierId);
+
+    const updated = exists
+      ? current.filter((id) => id !== tierId)
+      : [...current, tierId];
+
+    handleChange({
+      target: {
+        name: "availableTierIds",
+        value: updated,
+      },
     });
   };
 
-  const toggleSlot = (slot) => {
-    const exists = formData.availableSlots.find((s) => s.id === slot.id);
-
-    if (exists) {
-      setFormData({
-        ...formData,
-        availableSlots: formData.availableSlots.filter(
-          (s) => s.id !== slot.id
-        ),
-      });
-    } else {
-      setFormData({
-        ...formData,
-        availableSlots: [...formData.availableSlots, slot],
-      });
-    }
-  };
-
-  const handleSubmit = (e) => {
+  // 🔥 Submit wrapper
+  const onSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData, images);
+    handleSubmit(e, images);
   };
+
+  // safety
+  if (!formData) return null;
 
   return (
-    <form className="space-y-8" onSubmit={handleSubmit}>
+    <form onSubmit={onSubmit} className="space-y-8">
 
       {/* ================= BASIC INFO ================= */}
       <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-5 space-y-4">
-        <h3 className="text-lg font-semibold text-white">Basic Info</h3>
+        <h3 className="text-white font-semibold text-lg">
+          Basic Info
+        </h3>
 
-        <div>
-          <label className="block text-sm text-gray-400 mb-2">
-            Table Name
-          </label>
-          <input
-            name="tableName"
-            value={formData.tableName}
-            onChange={handleChange}
-            placeholder="Enter table name"
-            className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition"
-          />
-        </div>
+        <input
+          required
+          name="tableName"
+          value={formData.tableName || ""}
+          onChange={onInputChange}
+          placeholder="Enter table name"
+          className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500"
+        />
 
-        <div>
-          <label className="block text-sm text-gray-400 mb-2">
-            Table Type
-          </label>
-          <select
-            name="tableType"
-            value={formData.tableType}
-            onChange={handleChange}
-            className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition"
-          >
-            <option value="REGULAR">REGULAR</option>
-            <option value="PREMIUM">PREMIUM</option>
-          </select>
-        </div>
+        <select
+          name="tableType"
+          value={formData.tableType || "premium"}
+          onChange={onInputChange}
+          className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500"
+        >
+          <option value="premium">Premium</option>
+          <option value="regular">Regular</option>
+        </select>
       </div>
 
-      {/* ================= SLOTS ================= */}
+      {/* ================= IMAGE UPLOAD ================= */}
       <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-5 space-y-4">
-        <h3 className="text-lg font-semibold text-white">Available Slots</h3>
+        <h3 className="text-white font-semibold text-lg">
+          Upload Images
+        </h3>
 
-        <div className="grid grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-1">
-          {allSlots.map((slot) => {
-            const isActive = formData.availableSlots.some(
-              (s) => s.id === slot.id
-            );
+        <input
+          type="file"
+          multiple
+          onChange={handleImageUpload}
+          className="text-sm text-gray-400"
+        />
+
+        {/* Preview */}
+        {previewUrls.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {previewUrls.map((url, i) => (
+              <img
+                key={i}
+                src={url}
+                alt="preview"
+                className="w-24 h-24 object-cover rounded-lg border border-gray-700"
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ================= TIERS ================= */}
+      <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-5 space-y-4">
+        <h3 className="text-white font-semibold text-lg">
+          Pricing Tiers
+        </h3>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {tiers.map((tier) => {
+            const tierId = tier.id || tier._id;
+
+            const isActive =
+              formData.availableTierIds?.includes(tierId);
 
             return (
-              <div
-                key={slot.id}
-                onClick={() => toggleSlot(slot)}
-                className={`cursor-pointer px-3 py-2 rounded-xl border text-sm transition-all
+              <button
+                key={tierId}
+                type="button"
+                onClick={() => handleTierToggle(tierId)}
+                className={`p-4 rounded-xl border text-left transition
                 ${
                   isActive
                     ? "bg-green-500/10 border-green-500 text-green-400"
                     : "bg-[#111] border-gray-800 text-gray-300 hover:border-green-500/40"
                 }`}
               >
-                {slot.slotName}
-              </div>
+                <p className="font-semibold text-sm">
+                  {tier.hours} Hours
+                </p>
+
+                <p className="text-xs mt-1">
+                  ₹{tier.basePrice}
+                </p>
+
+                {tier.discountPercentage && (
+                  <p className="text-[11px] opacity-60 mt-1">
+                    {tier.discountPercentage}% OFF
+                  </p>
+                )}
+              </button>
             );
           })}
         </div>
-      </div>
 
-      {/* ================= PRICING TIERS (CLEAN DROPDOWN) ================= */}
-      <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-5 space-y-4">
-        <h3 className="text-lg font-semibold text-white">
-          Pricing Tier
-        </h3>
-
-        <select
-          name="tierId"
-          value={formData.tierId}
-          onChange={handleChange}
-          className="w-full bg-[#111] border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500 transition"
-        >
-          <option value="">Select a pricing tier</option>
-
-          {allTiers.map((tier) => (
-            <option key={tier.id} value={tier.id}>
-              {tier.hours} hr — ₹{tier.basePrice} ({tier.discountPercentage}% off)
-            </option>
-          ))}
-        </select>
-
-        {formData.tierId && (
+        {formData.availableTierIds?.length > 0 && (
           <p className="text-xs text-gray-500">
-            Selected tier will be applied to this table
+            {formData.availableTierIds.length} tier(s) selected
           </p>
         )}
       </div>
 
-      {/* ================= IMAGES ================= */}
-      {mode === "create" && (
-        <div className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-5 space-y-3">
-          <h3 className="text-lg font-semibold text-white">
-            Upload Images
-          </h3>
-
-          <input
-            type="file"
-            multiple
-            onChange={(e) => setImages([...e.target.files])}
-            className="text-gray-400 text-sm"
-          />
-        </div>
-      )}
-
       {/* ================= SUBMIT ================= */}
-      <button className="w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-black font-semibold transition">
-        {mode === "create" ? "Create Table" : "Update Table"}
+      <button
+        type="submit"
+        disabled={loading}
+        className="w-full py-3 rounded-xl bg-green-500 hover:bg-green-600 text-black font-semibold transition disabled:opacity-50"
+      >
+        {loading ? "PROCESSING..." : buttonText}
       </button>
-
     </form>
   );
 };

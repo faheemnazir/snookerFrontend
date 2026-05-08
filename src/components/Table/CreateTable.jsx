@@ -1,58 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createTable } from "../../Services/api";
+
 import TableForm from "./TableForm";
-import SectionCard from "../common/SectionCard";
 
 const CreateTable = () => {
   const navigate = useNavigate();
 
- const handleCreate = async (data, images) => {
-  try {
-    const formData = new FormData();
+  const [loading, setLoading] = useState(false);
 
+  const [formData, setFormData] = useState({
+    tableName: "",
+    tableType: "premium",
+    availableTierIds: [],
+  });
 
-    const payload = { 
-      ...data,
-      availableSlots: data.availableSlots.map((s) => s.id),
-    };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    formData.append("tableData", JSON.stringify(payload));
+  const handleSubmit = async (e, images) => {
+    e.preventDefault();
 
-    images.forEach((file) => {
-      formData.append("images", file);
-    });
+    try {
+      setLoading(true);
 
-    
-    const res = await createTable(formData);
+      const form = new FormData();
 
-    console.log("TABLE CREATED:", res);
+      form.append("tableData", JSON.stringify(formData));
 
-    navigate("/admin/tables");
+      images.forEach((img) => {
+        form.append("images", img);
+      });
 
-  } catch (err) {
-    console.error("CREATE ERROR:", err);
+      await createTable(form);
 
-    alert(
-      err.response?.data ||
-      err.message ||
-      "Failed to create table"
-    );
-  }
-};
+      navigate("/admin/tables");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to create table");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="space-y-6">
-
-      <SectionCard
-        title="Create New Table"
-        description="Add a new snooker table with slots and pricing"
-      >
-        <TableForm mode="create" onSubmit={handleCreate} />
-      </SectionCard>
-
-    </div>
+    <TableForm
+      formData={formData}
+      handleChange={handleChange}
+      handleSubmit={handleSubmit}
+      loading={loading}
+      buttonText="Create Table"
+    />
   );
 };
 

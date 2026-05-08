@@ -265,39 +265,11 @@ export const getAllTiers = async () => {
 
 
 
-
-
-// slots 
-
-export const getAllSlots = async () => {
+// GET TIERS UNDER PRICE
+export const getTiersUnderPrice = async (maxPrice) => {
   try {
     const response = await API.get(
-      "/api/admin/getAllTimeSlots",{
-        headers:{
-          "ngrok-skip-browser-warning":"true"
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error(
-      "Fetch Slots Error:",
-      error.response?.data || error.message
-    );
-
-    throw error;
-  }
-};
-
-
-
-// CREATE TIME SLOT
-export const createTimeSlot = async (slotData) => {
-  try {
-    const response = await API.post(
-      "/api/admin/createTimeSLot",
-      slotData,
+      `/api/admin/tiers/underPrice/${maxPrice}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -308,19 +280,21 @@ export const createTimeSlot = async (slotData) => {
     return response.data;
   } catch (error) {
     console.error(
-      "Create Slot Error:",
+      "Get Tiers Under Price Error:",
       error.response?.data || error.message
     );
+
     throw error;
   }
 };
 
 
-// REMOVE SLOT FROM TABLE
-export const removeSlotFromTable = async (tableId, slotId) => {
+
+// GET TIERS BY EXACT PRICE
+export const getTiersByPrice = async (price) => {
   try {
-    const response = await API.delete(
-      `/api/admin/${tableId}/remove-slot/${slotId}`,
+    const response = await API.get(
+      `/api/admin/tiers/byPrice/${price}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -331,20 +305,19 @@ export const removeSlotFromTable = async (tableId, slotId) => {
     return response.data;
   } catch (error) {
     console.error(
-      "Remove Slot Error:",
+      "Get Tiers By Price Error:",
       error.response?.data || error.message
     );
+
     throw error;
   }
 };
 
-
-
-// DELETE SLOT (GLOBAL)
-export const deleteTimeSlot = async (id) => {
+// GET TIERS BY HOURS
+export const getTiersByHours = async (hours) => {
   try {
-    const response = await API.delete(
-      `/api/admin/deleteTimeSlotById/${id}`,
+    const response = await API.get(
+      `/api/admin/tiers/byHours/${hours}`,
       {
         headers: {
           "ngrok-skip-browser-warning": "true",
@@ -355,16 +328,13 @@ export const deleteTimeSlot = async (id) => {
     return response.data;
   } catch (error) {
     console.error(
-      "Delete Slot Error:",
+      "Get Tiers By Hours Error:",
       error.response?.data || error.message
     );
+
     throw error;
   }
 };
-
-
-
-
 
 
 
@@ -391,6 +361,139 @@ export const verifyPayment = async (paymentData) => {
     throw error;
   }
 };
+
+
+
+//! Courses 
+// CREATE COURSE
+export const createCourse = async (courseData) => {
+  try {
+    const response = await API.post(
+      "/api/admin/courses",
+      courseData,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Create Course Error:",
+      error.response?.data || error.message
+    );
+
+    throw error;
+  }
+};
+
+// GET ALL ENROLLMENTS
+export const getAllEnrollments = async () => {
+  try {
+    const response = await API.get(
+      "/api/admin/enrollments",
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Get All Enrollments Error:",
+      error.response?.data || error.message
+    );
+
+    throw error;
+  }
+};
+
+
+
+// DELETE COURSE
+export const deleteCourse = async (id) => {
+  try {
+    const response = await API.delete(
+      `/api/admin/courses/${id}`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Delete Course Error:",
+      error.response?.data || error.message
+    );
+
+    throw error;
+  }
+};
+
+
+// GET AVAILABLE BOOKING TABLES BY DATE
+export const getBookingTables = async (date) => {
+  try {
+    const response = await API.get(
+      `/api/bookings/tables?date=${date}`,
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Get Booking Tables Error:",
+      error.response?.data || error.message
+    );
+
+    throw error;
+  }
+};
+
+
+
+// GET ACTIVE BOOKINGS
+export const getActiveBookings = async () => {
+  try {
+    const response = await API.get(
+      "/api/bookings/active",
+      {
+        headers: {
+          "ngrok-skip-browser-warning": "true",
+        },
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Get Active Bookings Error:",
+      error.response?.data || error.message
+    );
+
+    throw error;
+  }
+};
+
+
+
+
+
 
 
 export default API;

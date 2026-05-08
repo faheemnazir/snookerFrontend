@@ -9,69 +9,101 @@ const UpdateTable = () => {
   const navigate = useNavigate();
 
   const [table, setTable] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [pageLoading, setPageLoading] = useState(true);
 
+  // ================= FETCH TABLE =================
   useEffect(() => {
-   const fetchTable = async () => {
-  try {
-    // fetch both types (since we don't know which one it is)
-    const regularTables = await getAllTables("REGULAR");
-    const premiumTables = await getAllTables("PREMIUM");
+    const fetchTable = async () => {
+      try {
+        setPageLoading(true);
 
-    const allTables = [...regularTables, ...premiumTables];
+        const [regularTables, premiumTables] = await Promise.all([
+          getAllTables("REGULAR"),
+          getAllTables("PREMIUM"),
+        ]);
 
- 
-    const found = allTables.find((t) => t.id === Number(id));
+        const allTables = [...regularTables, ...premiumTables];
 
-    setTable(found || null);
+        const found = allTables.find(
+          (t) => String(t.id) === String(id)
+        );
 
-  } catch (err) {
-    console.error("FETCH ERROR:", err);
+        if (!found) {
+          setTable(null);
+          return;
+        }
 
-    alert(
-      err.response?.data ||
-      err.message ||
-      "Failed to load table"
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+        setTable(found);
 
-    fetchTable();
-  }, [id]);
+        // 🔥 PREFILL FORM DATA
+        setFormData({
+          tableName: found.tableName || "",
+          tableType: found.tableType || "REGULAR",
+          availableTierIds: found.availableTierIds || [],
+        });
 
-const handleUpdate = async (data) => {
-  try {
-    const payload = {
-      ...table,   
-      ...data,    
-      id: Number(id), 
+      } catch (err) {
+        console.error("FETCH ERROR:", err);
+        alert("Failed to load table");
+      } finally {
+        setPageLoading(false);
+      }
     };
 
-    await updateTable(id, payload);
+    if (id) fetchTable();
+  }, [id]);
 
-    navigate("/admin/tables");
+  // ================= HANDLE CHANGE =================
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  } catch (err) {
-    console.error("UPDATE ERROR:", err);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-    alert(
-      err.response?.data ||
-      err.message ||
-      "Update failed"
-    );
-  }
-};
+  // ================= HANDLE SUBMIT =================
+  const handleSubmit = async (e, images) => {
+    try {
+      setLoading(true);
 
-  if (loading) {
+      const payload = {
+        ...table, // keep existing fields
+        ...formData, // updated fields
+        id: Number(id),
+      };
+
+      // 👉 If you later support image upload, handle here
+
+      await updateTable(id, payload);
+
+      navigate("/admin/tables");
+
+    } catch (err) {
+      console.error("UPDATE ERROR:", err);
+      alert(
+        err.response?.data ||
+        err.message ||
+        "Update failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ================= LOADING =================
+  if (pageLoading) {
     return (
-      <div className="text-center text-gray-500 py-10">
+      <div className="text-center text-gray-400 py-10">
         Loading table...
       </div>
     );
   }
 
+  // ================= NOT FOUND =================
   if (!table) {
     return (
       <div className="text-center text-red-400 py-10">
@@ -81,7 +113,7 @@ const handleUpdate = async (data) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 space-y-8">
 
       {/* HEADER */}
       <div className="border-b border-gray-800 pb-4">
@@ -89,51 +121,52 @@ const handleUpdate = async (data) => {
           Update Table
         </h2>
         <p className="text-gray-500 mt-1">
-          Modify table details, slots and pricing
+          Modify table details, tiers and images
         </p>
       </div>
 
-      {/* LAYOUT */}
-      <div className="grid md:grid-cols-2 gap-6">
+      {/* GRID */}
+      <div className="grid lg:grid-cols-3 gap-6">
 
-        {/* LEFT - FORM */}
-        <SectionCard
-          title="Edit Table"
-          description="Update configuration and pricing"
-        >
-          <TableForm
-            mode="update"
-            initialData={table}
-            onSubmit={handleUpdate}
-          />
-        </SectionCard>
+        {/* FORM */}
+        <div className="lg:col-span-2">
+          <SectionCard
+            title="Edit Table"
+            description="Update configuration and pricing"
+          >
+            {formData && (
+              <TableForm
+                formData={formData}
+                handleChange={handleChange}
+                handleSubmit={handleSubmit}
+                loading={loading}
+                buttonText="Update Table"
+              />
+            )}
+          </SectionCard>
+        </div>
 
-        {/* RIGHT - INFO PANEL */}
-        <div className="hidden md:flex flex-col gap-6">
+        {/* SIDE PANEL */}
+        <div className="space-y-6">
 
-          {/* TABLE INFO */}
+          {/* CURRENT DETAILS */}
           <div className="bg-[#111] border border-gray-800 rounded-xl p-5">
             <h3 className="text-lg mb-3">Current Details</h3>
 
             <div className="space-y-2 text-sm text-gray-400">
               <p>
                 <span className="text-white">Name:</span>{" "}
-                {table.tableName}
+                {table.tableName || "N/A"}
               </p>
 
               <p>
                 <span className="text-white">Type:</span>{" "}
-                {table.tableType}
-              </p>
-
-              <p>
-                <span className="text-white">Slots:</span>{" "}
-                {table.availableSlots?.length || 0}
+                {table.tableType || "N/A"}
               </p>
 
               <p>
                 <span className="text-white">Tiers:</span>{" "}
-                {table.availableTiers?.length || 0}
+                {table.availableTierIds?.length || 0}
               </p>
             </div>
           </div>
@@ -143,15 +176,14 @@ const handleUpdate = async (data) => {
             <h3 className="text-lg mb-2">Tips</h3>
             <p className="text-gray-400 text-sm">
               • Keep table names consistent <br />
-              • Verify slot availability <br />
-              • Adjust pricing carefully
+              • Verify tier selection <br />
+              • Upload clear images
             </p>
           </div>
 
         </div>
 
       </div>
-
     </div>
   );
 };

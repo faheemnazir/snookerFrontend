@@ -6,8 +6,8 @@ const Dashboard = () => {
   const links = [
     { name: "Tables", path: "/admin/tables" },
     { name: "Create Table", path: "/admin/create" },
-    { name: "Time Slots", path: "/admin/slots" },
-    { name: "Create Slot", path: "/admin/create-slot" },
+      { name: "Bookings", path: "/admin/bookings", },
+    { name: "Enrollment", path: "/admin/enrollments", },
     { name: "Pricing Tiers", path: "/admin/tier" },
   ];
 
