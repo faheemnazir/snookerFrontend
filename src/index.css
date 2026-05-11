@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base */
+body {
+  @apply font-sans bg-background text-on-surface antialiased;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-heading tracking-tight;
+}
+
+button {
+  @apply font-sans;
+}
+
+p {
+  @apply text-base leading-relaxed;
+}
+
+.btn-primary {
+  @apply px-10 py-4 bg-accent text-background text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_25px_rgba(197,160,89,0.35)];
+}
+
+.btn-secondary {
+  @apply px-10 py-4 border border-white/20 text-white text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-background;
+}
+
+.btn-small {
+  @apply px-6 py-3 border border-white/20 text-white text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-background;
+}
+
+
+
+
+
+/* Smooth UI feel */
+* {
+  @apply transition-colors duration-200;
+}
