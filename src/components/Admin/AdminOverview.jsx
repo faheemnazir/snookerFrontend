@@ -159,7 +159,11 @@ const AdminOverview = () => {
       description="Live analytics and operational insights"
     >
       {loading ? (
+<<<<<<< HEAD
         <div className="bg-card/50 border border-white/5 p-20 text-center text-muted-foreground font-light text-sm">
+=======
+        <div className="bg-[#111]/80 border border-gray-800 rounded-2xl p-20 text-center text-gray-500">
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
           Loading dashboard metrics...
         </div>
       ) : (
@@ -168,35 +172,60 @@ const AdminOverview = () => {
             {metricCards.map((stat, i) => (
               <div
                 key={i}
+<<<<<<< HEAD
                 className="bg-card/50 backdrop-blur-md border border-white/5 p-8 hover:border-accent/30 transition-all duration-300"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div
                     className="w-14 h-14 bg-accent/10 border border-accent/20 flex items-center justify-center text-2xl"
+=======
+                className={`bg-[#111]/80 backdrop-blur-sm border ${stat.border} rounded-2xl p-8 hover:-translate-y-1 transition duration-300`}
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div
+                    className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${stat.bg} border ${stat.border}`}
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                   >
                     {stat.icon}
                   </div>
 
+<<<<<<< HEAD
                   <div className="w-10 h-[2px] bg-accent/50 rounded-full"></div>
                 </div>
 
                 <h3
                   className="font-heading text-4xl font-bold mb-3 text-white"
+=======
+                  <div className="w-10 h-[2px] bg-green-500 rounded-full"></div>
+                </div>
+
+                <h3
+                  className={`text-4xl font-bold mb-3 ${stat.color}`}
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                 >
                   {stat.val}
                 </h3>
 
+<<<<<<< HEAD
                 <p className="text-white text-xs font-bold uppercase tracking-widest mb-2">
                   {stat.label}
                 </p>
 
                 <p className="text-muted-foreground font-light text-sm leading-relaxed">
+=======
+                <p className="text-white text-lg font-semibold mb-2">
+                  {stat.label}
+                </p>
+
+                <p className="text-gray-500 text-sm leading-relaxed">
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                   {stat.desc}
                 </p>
               </div>
             ))}
           </div>
 
+<<<<<<< HEAD
           <div className="mt-10 bg-card/50 border border-white/5 p-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div>
               <h3 className="font-heading text-2xl font-bold uppercase text-white mb-2">
@@ -204,12 +233,22 @@ const AdminOverview = () => {
               </h3>
 
               <p className="text-muted-foreground font-light text-sm">
+=======
+          <div className="mt-10 bg-[#111]/80 border border-gray-800 rounded-2xl p-8 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div>
+              <h3 className="text-2xl font-semibold text-white mb-2">
+                Arena Systems Status
+              </h3>
+
+              <p className="text-gray-500 text-sm">
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                 All systems operational • Last Sync:{" "}
                 {now.toLocaleTimeString()}
               </p>
             </div>
 
             <div className="flex flex-wrap gap-4">
+<<<<<<< HEAD
               <div className="px-5 py-3 bg-accent/5 border border-accent/10 text-accent text-xs font-bold uppercase tracking-widest">
                 Database Active
               </div>
@@ -219,6 +258,17 @@ const AdminOverview = () => {
               </div>
 
               <div className="px-5 py-3 bg-accent/5 border border-accent/10 text-accent text-xs font-bold uppercase tracking-widest">
+=======
+              <div className="px-5 py-3 bg-green-500/10 border border-green-500/20 rounded-xl text-green-400 text-sm font-medium">
+                Database Active
+              </div>
+
+              <div className="px-5 py-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400 text-sm font-medium">
+                Live Tracking ON
+              </div>
+
+              <div className="px-5 py-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-yellow-400 text-sm font-medium">
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                 Payment Gateway Stable
               </div>
             </div>

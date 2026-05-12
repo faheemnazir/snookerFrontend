@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+<<<<<<< HEAD
 
   theme: {
     container: {
@@ -86,3 +87,20 @@ export default {
 
   plugins: [],
 };
+=======
+  theme: {
+    extend: {
+      colors: {
+        primary: "#4fbf78",   // snooker green
+        accent: "#C62828",    // red
+      },
+ fontFamily: {
+  heading: ['Orbitron', 'sans-serif'],
+  body: ['Rajdhani', 'sans-serif'],
+},
+    },
+  },
+  plugins: [],
+};
+
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389

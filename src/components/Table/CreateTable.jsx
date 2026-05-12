@@ -32,12 +32,16 @@ const CreateTable = () => {
 
       const form = new FormData();
 
+<<<<<<< HEAD
       form.append("tableName", formData.tableName);
       form.append("tableType", formData.tableType.toUpperCase());
       
       if (formData.availableTierIds) {
         formData.availableTierIds.forEach(id => form.append("tierIds", id));
       }
+=======
+      form.append("tableData", JSON.stringify(formData));
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
       images.forEach((img) => {
         form.append("images", img);

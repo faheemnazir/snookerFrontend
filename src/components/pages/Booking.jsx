@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import React, { useEffect, useMemo, useState } from "react";
 import logo from "../../assets/logo.png";
@@ -5,6 +6,10 @@ import main from "../../assets/main.png";
 import img2 from "../../assets/img2.jpg";
 import img3 from "../../assets/img3.jpg";
 import img1 from "../../assets/img1.jpg";
+=======
+import React, { useEffect, useMemo, useState } from "react";
+import logo from "../../assets/logo.png";
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
 import {
   initiateBooking,
@@ -14,6 +19,7 @@ import {
 
 const BookingPage = () => {
   const [type, setType] = useState("premium");
+<<<<<<< HEAD
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [main, img1, img2, img3];
 
@@ -23,6 +29,8 @@ const BookingPage = () => {
     }, 5000); // 5 seconds
     return () => clearInterval(interval);
   }, []);
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
   const [open, setOpen] = useState(false);
 
@@ -35,9 +43,12 @@ const BookingPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [success, setSuccess] = useState(false);
+<<<<<<< HEAD
  
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
   const [formData, setFormData] = useState({
     tableId: "",
@@ -49,11 +60,14 @@ const BookingPage = () => {
     startTime: "",
   });
 
+<<<<<<< HEAD
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsTable, setDetailsTable] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
 
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
   // FETCH TABLES
   const fetchTables = async () => {
     try {
@@ -73,6 +87,7 @@ const BookingPage = () => {
     fetchTables();
   }, [formData.bookingDate]);
 
+<<<<<<< HEAD
   // Prevent background scroll when modal is open
   useEffect(() => {
     if (open || detailsOpen) {
@@ -85,6 +100,8 @@ const BookingPage = () => {
     };
   }, [open, detailsOpen]);
 
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
   // FILTER TABLES
   const filteredTables = useMemo(() => {
     return tables.filter(
@@ -128,12 +145,15 @@ const BookingPage = () => {
       return false;
     }
 
+<<<<<<< HEAD
     const nameRegex = /^[a-zA-Z\s]+$/;
     if (!nameRegex.test(formData.guestName)) {
       setError("Name must contain only letters and spaces");
       return false;
     }
 
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
     const phoneRegex = /^[0-9]{10}$/;
 
     if (!phoneRegex.test(formData.guestPhone)) {
@@ -166,6 +186,7 @@ const BookingPage = () => {
       return false;
     }
 
+<<<<<<< HEAD
     const now = new Date();
     const selectedDateTime = new Date(`${formData.bookingDate}T${formData.startTime}`);
    
@@ -174,6 +195,8 @@ const BookingPage = () => {
       return false;
     }
 
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
     return true;
   };
 
@@ -258,6 +281,7 @@ const BookingPage = () => {
                 paymentResponse.razorpay_signature,
             });
 
+<<<<<<< HEAD
             setPaymentDetails({
               txnId: paymentResponse.razorpay_payment_id,
               amount: response.amount,
@@ -276,6 +300,10 @@ const BookingPage = () => {
               startTime: "",
             });
 
+=======
+            setSuccess(true);
+
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
             await fetchTables();
 
           } catch (err) {
@@ -310,8 +338,12 @@ const BookingPage = () => {
 
       setError(
         err.response?.data?.message ||
+<<<<<<< HEAD
           (typeof err.response?.data === 'string' ? err.response.data : null) ||
           "Booking failed. This time slot might already be reserved."
+=======
+          "Booking failed"
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
       );
 
     } finally {
@@ -320,6 +352,7 @@ const BookingPage = () => {
   };
 
   return (
+<<<<<<< HEAD
     <div className="bg-background min-h-screen text-white relative overflow-hidden">
 
       {/* Cinematic Background Overlay */}
@@ -338,10 +371,34 @@ const BookingPage = () => {
           </h1>
           <p className="text-muted-foreground font-light text-md max-w-xl mx-auto leading-relaxed">
             Choose your table grade and preferred session duration. Elevate your game in our premium sanctuary.
+=======
+    <div className="bg-black">
+
+      {/* WATERMARK */}
+      <img
+        src={logo}
+        className="fixed opacity-5 w-[900px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
+      />
+
+      <div className="bg-black text-white min-h-screen py-24 px-6">
+
+        {/* HEADER */}
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-6xl font-semibold mb-6">
+            Book a Table
+          </h1>
+
+          <div className="w-20 h-[2px] bg-green-500 mx-auto mb-6" />
+
+          <p className="text-gray-500 max-w-xl mx-auto text-xl">
+            Choose your table type and preferred
+            session duration.
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
           </p>
         </div>
 
         {/* TOGGLE */}
+<<<<<<< HEAD
         <div className="flex justify-center mb-12">
           <div className="bg-card/50 backdrop-blur-sm border border-white/5 flex rounded-full overflow-hidden p-1">
             <button
@@ -350,20 +407,42 @@ const BookingPage = () => {
                 type === "premium"
                   ? "bg-accent text-background"
                   : "text-muted-foreground hover:text-white"
+=======
+        <div className="flex justify-center mb-16">
+          <div className="bg-[#111] rounded-xl p-1 border border-gray-800 flex text-2xl">
+
+            <button
+              onClick={() => setType("premium")}
+              className={`px-6 py-2 rounded-lg transition ${
+                type === "premium"
+                  ? "bg-green-500 text-black"
+                  : "text-gray-400"
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
               }`}
             >
               Premium Tables ({premiumCount})
             </button>
+<<<<<<< HEAD
             <button
               onClick={() => setType("regular")}
               className={`px-8 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
                 type === "regular"
                   ? "bg-accent text-background"
                   : "text-muted-foreground hover:text-white"
+=======
+
+            <button
+              onClick={() => setType("regular")}
+              className={`px-6 py-2 rounded-lg transition ${
+                type === "regular"
+                  ? "bg-green-500 text-black"
+                  : "text-gray-400"
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
               }`}
             >
               Regular Tables ({regularCount})
             </button>
+<<<<<<< HEAD
           </div>
         </div>
 
@@ -582,17 +661,129 @@ const BookingPage = () => {
                       <p><span className="text-muted-foreground">Amount Paid:</span> <span className="text-accent font-bold">₹{paymentDetails.amount}</span></p>
                     </div>
                   )}
+=======
+
+          </div>
+        </div>
+
+        {/* TABLES */}
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
+
+          {filteredTables.map((table) => (
+            <div
+              key={table.id}
+              className="bg-[#111]/70 backdrop-blur-sm p-8 rounded-2xl border border-gray-800"
+            >
+
+              <h2 className="text-3xl font-semibold mb-2">
+                {table.tableName}
+              </h2>
+
+              <p className="text-gray-500 mb-8">
+                {table.tableType}
+              </p>
+
+              {/* TIERS */}
+              <div className="space-y-4">
+
+                {table.availableTiers
+                  ?.sort((a, b) => a.hours - b.hours)
+                  .map((tier) => {
+
+                    const total =
+                      tier.basePrice *
+                      (1 -
+                        tier.discountPercentage / 100);
+
+                    return (
+                      <button
+                        key={tier.id}
+                        onClick={() => {
+                          setSelected({
+                            ...tier,
+                            total,
+                            table,
+                          });
+
+                          setFormData((prev) => ({
+                            ...prev,
+                            tableId: table.id,
+                            tierId: tier.id,
+                          }));
+
+                          setOpen(true);
+                        }}
+                        className="w-full border border-gray-700 rounded-xl p-4 text-left hover:border-green-500 transition"
+                      >
+
+                        <div className="flex justify-between items-center">
+
+                          <div>
+                            <p className="text-xl">
+                              {tier.hours} Hour
+                            </p>
+
+                            <p className="text-gray-500">
+                              {tier.discountPercentage}% OFF
+                            </p>
+                          </div>
+
+                          <div className="text-right">
+                            <p className="text-2xl font-semibold text-green-500">
+                              ₹{total.toFixed(0)}
+                            </p>
+                          </div>
+
+                        </div>
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* MODAL */}
+        {open && (
+          <div
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4"
+            onClick={() => setOpen(false)}
+          >
+
+            <div
+              className="bg-[#111] p-8 rounded-2xl max-w-md w-full border border-gray-800"
+              onClick={(e) => e.stopPropagation()}
+            >
+
+              {success ? (
+                <div className="text-center">
+
+                  <h2 className="text-4xl text-green-500 mb-4">
+                    Booking Confirmed
+                  </h2>
+
+                  <p className="text-gray-400 mb-6">
+                    Your table has been reserved successfully.
+                  </p>
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
                   <button
                     onClick={() => {
                       setOpen(false);
+<<<<<<< HEAD
                       setSuccess(false);
+=======
+
+                      setSuccess(false);
+
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                       setFormData({
                         tableId: "",
                         tierId: "",
                         guestName: "",
                         guestEmail: "",
                         guestPhone: "",
+<<<<<<< HEAD
                         bookingDate: new Date().toISOString().split("T")[0],
                         startTime: "",
                       });
@@ -949,6 +1140,128 @@ const BookingPage = () => {
                   <button
                     onClick={() => setOpen(false)}
                     className="mt-4 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-accent w-full text-center transition-all"
+=======
+                        bookingDate:
+                          new Date()
+                            .toISOString()
+                            .split("T")[0],
+                        startTime: "",
+                      });
+                    }}
+                    className="w-full py-3 bg-green-500 text-black rounded-xl font-semibold"
+                  >
+                    Close
+                  </button>
+
+                </div>
+              ) : (
+                <>
+                  <h2 className="text-3xl mb-4 text-center">
+                    Complete Booking
+                  </h2>
+
+                  {error && (
+                    <div className="mb-4 bg-red-500/10 border border-red-500 text-red-400 text-sm rounded-lg p-3 text-center">
+                      {error}
+                    </div>
+                  )}
+
+                  <p className="text-gray-400 text-xl text-center mb-6">
+                    {selected?.table?.tableName} •{" "}
+                    {selected?.hours} hr • ₹
+                    {selected?.total?.toFixed(0)}
+                  </p>
+
+                  {/* OCCUPIED */}
+                  {selected?.table?.occupiedRanges
+                    ?.length > 0 && (
+                    <div className="mb-6">
+                      <p className="text-red-400 mb-2">
+                        Occupied Slots
+                      </p>
+
+                      <div className="flex flex-wrap gap-2">
+                        {selected.table.occupiedRanges.map(
+                          (range, i) => (
+                            <span
+                              key={i}
+                              className="bg-red-500/10 border border-red-500 text-red-400 px-3 py-1 rounded-full text-sm"
+                            >
+                              {range}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  <form className="space-y-4">
+
+                    <input
+                      type="text"
+                      name="guestName"
+                      placeholder="Your Name"
+                      value={formData.guestName}
+                      onChange={handleChange}
+                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+                    />
+
+                    <input
+                      type="tel"
+                      name="guestPhone"
+                      placeholder="Phone Number"
+                      value={formData.guestPhone}
+                      onChange={handleChange}
+                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+                    />
+
+                    <input
+                      type="email"
+                      name="guestEmail"
+                      placeholder="Email Address"
+                      value={formData.guestEmail}
+                      onChange={handleChange}
+                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+                    />
+
+                    <input
+                      type="date"
+                      name="bookingDate"
+                      min={
+                        new Date()
+                          .toISOString()
+                          .split("T")[0]
+                      }
+                      value={formData.bookingDate}
+                      onChange={handleChange}
+                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+                    />
+
+                    <input
+                      type="time"
+                      name="startTime"
+                      value={formData.startTime}
+                      onChange={handleChange}
+                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      className="w-full py-3 text-xl bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition disabled:opacity-50"
+                    >
+                      {loading
+                        ? "Processing..."
+                        : "Confirm Booking"}
+                    </button>
+
+                  </form>
+
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="mt-4 text-xl text-gray-400 hover:text-white w-full text-center"
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                   >
                     Cancel
                   </button>
@@ -957,6 +1270,7 @@ const BookingPage = () => {
             </div>
           </div>
         )}
+<<<<<<< HEAD
 
         {/* TABLE DETAILS MODAL */}
         {detailsOpen && detailsTable && (
@@ -1041,6 +1355,8 @@ const BookingPage = () => {
             </div>
           </div>
         )}
+=======
+>>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
       </div>
     </div>
   );
