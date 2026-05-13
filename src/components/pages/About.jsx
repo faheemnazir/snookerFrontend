@@ -1,5 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
 import main from "../../assets/main.png";
 import logo from "../../assets/logo.png";
 
@@ -64,23 +63,147 @@ const About = () => {
       </div>
 
       <div className="relative z-10">
-        {/* HERO */}
+        {/* HERO
         <section className="relative h-[65vh] flex items-center justify-center text-center px-6">
-          <div className="max-w-3xl">
-            <span className="text-xs font-bold uppercase tracking-[0.4em] text-accent mb-6 block">
-              Our Story
-            </span>
+        <div className="max-w-4xl mx-auto text-center">
 
-            <h1 className="font-heading text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
-              About The Academy
-            </h1>
 
-            <p className="text-white/70 text-base md:text-lg leading-relaxed">
-              A refined destination where precision, discipline, and atmosphere
-              converge to redefine the snooker experience.
-            </p>
-          </div>
-        </section>
+  <h1 className="font-heading text-5xl md:text-7xl font-bold text-white leading-[0.95] tracking-tight">
+    About The Academy
+  </h1>
+
+  <p className="mt-8 text-lg md:text-xl text-white/70 leading-relaxed max-w-2xl mx-auto">
+    A refined destination where precision, discipline, and atmosphere
+    come together to create a premium snooker experience built for
+    focus, performance, and growth.
+  </p>
+
+  <div className="mt-12 flex items-center justify-center gap-4 md:gap-8 flex-wrap">
+    <div className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm min-w-[160px]">
+      <h3 className="text-white text-2xl font-semibold">Elite</h3>
+      <p className="text-white/50 text-sm mt-1">Training Environment</p>
+    </div>
+
+    <div className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm min-w-[160px]">
+      <h3 className="text-white text-2xl font-semibold">Modern</h3>
+      <p className="text-white/50 text-sm mt-1">Professional Setup</p>
+    </div>
+
+    <div className="px-6 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm min-w-[160px]">
+      <h3 className="text-white text-2xl font-semibold">Focused</h3>
+      <p className="text-white/50 text-sm mt-1">Player Development</p>
+    </div>
+  </div>
+</div>
+        </section> */}
+        <section className="relative min-h-screen flex items-center justify-center text-center px-6 pt-40 pb-24 overflow-hidden">
+  
+  {/* BACKGROUND GLOW */}
+  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(197,160,89,0.10),transparent_55%)] pointer-events-none" />
+
+  <div className="max-w-6xl mx-auto relative z-10">
+    
+    {/* LABEL */}
+  
+
+    {/* HEADING */}
+    <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-[92px] font-bold text-white leading-[0.92] tracking-tight max-w-5xl mx-auto">
+      About
+      <span className="block text-accent mt-2">
+        Snooker Academy
+      </span>
+    </h1>
+
+    {/* DESCRIPTION */}
+    <p className="mt-8 text-lg md:text-xl text-white/65 leading-relaxed max-w-3xl mx-auto">
+      A refined destination where precision, discipline, and atmosphere
+      converge to create a premium snooker environment designed for focus,
+      performance, and competitive excellence.
+    </p>
+
+
+    {/* CARDS */}
+    <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      {/* CARD */}
+      <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-accent/40">
+        
+        {/* GOLDEN GLOW */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-700 bg-[radial-gradient(circle_at_top,rgba(197,160,89,0.18),transparent_70%)]" />
+
+        {/* SHINE */}
+        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
+
+        <div className="relative z-10">
+          <h3 className="text-white text-3xl font-bold mb-3">
+            Elite
+          </h3>
+
+          <p className="text-accent text-[13px]  tracking-[0.35em] font-bold mb-5">
+            Training Environment
+          </p>
+
+          <p className="text-white/55 text-md leading-7">
+            Professional-grade tables and a focused atmosphere built for serious
+            players and competitive growth.
+          </p>
+        </div>
+      </div>
+
+      {/* CARD */}
+      <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-accent/40">
+        
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-700 bg-[radial-gradient(circle_at_top,rgba(197,160,89,0.18),transparent_70%)]" />
+
+        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
+
+        <div className="relative z-10">
+          <h3 className="text-white text-3xl font-bold mb-3">
+            Modern
+          </h3>
+
+          <p className="text-accent text-[13px] tracking-[0.35em] font-bold mb-5">
+            Professional Setup
+          </p>
+
+          <p className="text-white/55 text-md leading-7">
+            Carefully designed interiors and high-end equipment that elevate
+            comfort, precision, and performance.
+          </p>
+        </div>
+      </div>
+
+      {/* CARD */}
+      <div className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] backdrop-blur-xl p-8 transition-all duration-500 hover:-translate-y-2 hover:border-accent/40">
+        
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-700 bg-[radial-gradient(circle_at_top,rgba(197,160,89,0.18),transparent_70%)]" />
+
+        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" />
+
+        <div className="relative z-10">
+          <h3 className="text-white text-3xl font-bold mb-3">
+            Focused
+          </h3>
+
+          <p className="text-accent text-[13px]  tracking-[0.35em] font-bold mb-5">
+            Player Development
+          </p>
+
+          <p className="text-white/55 text-md leading-7">
+            Structured coaching and disciplined training sessions tailored to
+            help players refine every aspect of their game.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+
 
         {/* INTRO */}
         <section className="py-24 px-6">
@@ -251,9 +374,7 @@ const About = () => {
                       </p>
                     </div>
 
-                    <button className="w-full py-3 bg-accent text-background text-xs font-semibold uppercase tracking-widest rounded-md hover:shadow-[0_0_20px_rgba(197,160,89,0.3)] transition">
-                      View Profile
-                    </button>
+
                   </div>
                 </div>
               ))}
@@ -276,123 +397,6 @@ const About = () => {
           </div>
         </section>
       </div>
-=======
-import main from "../../assets/main.png"
-import logo from "../../assets/logo.png"
-
-const About = () => {
-  return (
-    <div className="bg-black text-white">
-
-      {/* HERO */}
-      <section className="relative h-[60vh] flex items-center justify-center">
-        <img
-          src={main}
-          alt="snooker"
-          className="absolute inset-0 w-full h-full object-cover opacity-40 blur-[1px]"
-        />
-        <div className="relative z-10 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">
-            About Snooker Academy
-          </h1>
-          <p className="text-gray-300 text-xl max-w-2xl mx-auto">
-            A premium destination for players who demand precision, atmosphere, and excellence.
-          </p>
-        </div>
-      </section>
-
-      {/* INTRO */}
-      <section className="py-20 px-6 max-w-5xl mx-auto text-center">
-        <h2 className="text-3xl font-semibold mb-6">
-          Redefining Snooker in Srinagar
-        </h2>
-        <p className="text-gray-400 text-xl leading-relaxed mb-6">
-          Located in the heart of Srinagar, Snooker Academy is more than just a place to play — 
-          it’s a space built for those who appreciate the art of the game. Every detail, from 
-          lighting to table precision, is designed to deliver a professional-level experience.
-        </p>
-        <p className="text-gray-400 text-xl leading-relaxed">
-          Whether you're a seasoned player or just stepping into the world of snooker, 
-          our environment ensures focus, comfort, and a touch of luxury that sets us apart.
-        </p>
-      </section>
-
-      {/* EXPERIENCE SECTION */}
-      <section className="py-20 px-6 bg-[#0f0f0f]">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-
-          <img
-            src={logo}
-            alt="snooker table"
-            className="rounded-2xl object-cover w-full h-[500px]"
-          />
-
-          <div>
-            <h2 className="text-3xl font-semibold mb-6">
-              Built for Precision & Performance
-            </h2>
-            <p className="text-gray-400 text-xl mb-4">
-              Our academy features high-quality snooker tables maintained to the highest standards,
-              ensuring consistent play and professional accuracy.
-            </p>
-            <p className="text-gray-400 mb-4">
-              The ambiance is carefully curated — low lighting, premium interiors, and a calm,
-              focused atmosphere that allows players to fully immerse themselves in the game.
-            </p>
-            <p className="text-gray-400 text-xl">
-              It’s not just about playing — it’s about experiencing snooker the way it’s meant to be.
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* FEATURES */}
-      <section className="py-20 px-6">
-        <h2 className="text-3xl font-semibold text-center mb-12">
-          What Sets Us Apart
-        </h2>
-
-        <div className="grid text-xl md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-
-          {[
-            {
-              title: "Professional Setup",
-              desc: "Tournament-level tables and equipment for a consistent and elite playing experience.",
-            },
-            {
-              title: "Premium Ambience",
-              desc: "A refined, calm, and visually striking environment designed for focus and comfort.",
-            },
-            {
-              title: "Competitive Culture",
-              desc: "Regular games, challenges, and a community of players passionate about the sport.",
-            },
-          ].map((item, i) => (
-            <div
-              key={i}
-              className="bg-[#0f0f0f] p-6 rounded-2xl border border-gray-800 hover:border-green-500 transition shadow-md hover:shadow-green-500/20"
-            >
-              <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-              <p className="text-gray-400">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* MISSION */}
-      <section className="py-20 px-6 bg-[#0f0f0f] text-center">
-        <h2 className="text-3xl font-semibold mb-6">
-          Our Vision
-        </h2>
-        <p className="text-gray-400 text-xl max-w-3xl mx-auto leading-relaxed">
-          To create a hub for snooker enthusiasts in Srinagar where skill, discipline, and passion
-          come together. Snooker Academy aims to elevate the standard of the game locally while
-          providing a world-class environment for players of all levels.
-        </p>
-      </section>
-
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
     </div>
   );
 };

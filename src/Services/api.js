@@ -225,7 +225,7 @@ export const updateTier = async (id, tierData) => {
       id: id, // backend expects it in body too (as per swagger)
       hours: tierData.hours,
       basePrice: tierData.basePrice,
-      discountPercentage: tierData.discountPercentage,
+
     });
 
     return response.data;
@@ -390,7 +390,6 @@ export const createCourse = async (courseData) => {
   }
 };
 
-<<<<<<< HEAD
 // GET ALL COURSES
 export const getAllCourses = async () => {
   try {
@@ -415,8 +414,6 @@ export const getAllCourses = async () => {
   }
 };
 
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 // GET ALL ENROLLMENTS
 export const getAllEnrollments = async () => {
   try {
@@ -517,7 +514,6 @@ export const getActiveBookings = async () => {
   }
 };
 
-<<<<<<< HEAD
 // GET ALL BOOKINGS (HISTORY)
 export const getAllBookings = async () => {
   try {
@@ -605,12 +601,5 @@ export const updateUser = async (id, userData) => {
     throw error;
   }
 };
-=======
-
-
-
-
-
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
 export default API;

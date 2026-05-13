@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 import React, { useEffect, useMemo, useState } from "react";
 import logo from "../../assets/logo.png";
@@ -6,10 +5,6 @@ import main from "../../assets/main.png";
 import img2 from "../../assets/img2.jpg";
 import img3 from "../../assets/img3.jpg";
 import img1 from "../../assets/img1.jpg";
-=======
-import React, { useEffect, useMemo, useState } from "react";
-import logo from "../../assets/logo.png";
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
 import {
   initiateBooking,
@@ -19,7 +14,6 @@ import {
 
 const BookingPage = () => {
   const [type, setType] = useState("premium");
-<<<<<<< HEAD
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const images = [main, img1, img2, img3];
 
@@ -29,8 +23,6 @@ const BookingPage = () => {
     }, 5000); // 5 seconds
     return () => clearInterval(interval);
   }, []);
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
   const [open, setOpen] = useState(false);
 
@@ -43,31 +35,64 @@ const BookingPage = () => {
   const [loading, setLoading] = useState(false);
 
   const [success, setSuccess] = useState(false);
-<<<<<<< HEAD
  
   const [viewMonth, setViewMonth] = useState(new Date().getMonth());
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
 
   const [formData, setFormData] = useState({
     tableId: "",
-    tierId: "",
+    hours: 1,
     guestName: "",
     guestEmail: "",
     guestPhone: "",
     bookingDate: new Date().toISOString().split("T")[0],
     startTime: "",
+    selectedSlots: [],
   });
 
-<<<<<<< HEAD
+  const [tableHours, setTableHours] = useState({});
+
   const [paymentDetails, setPaymentDetails] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [detailsTable, setDetailsTable] = useState(null);
   const [currentStep, setCurrentStep] = useState(1);
 
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
+  const calculatePrice = (table, hours) => {
+    let total = 0;
+    let originalPrice = 0;
+    
+    const tiers = table?.availableTiers || [];
+    const tableType = table?.tableType;
+    
+    const tier1 = tiers.find(t => t.hours === 1);
+    const tier2 = tiers.find(t => t.hours === 2);
+    const tier3 = tiers.find(t => t.hours === 3);
+    
+    const price1 = tier1 ? tier1.basePrice : (tableType === "PREMIUM" ? 600 : 480);
+    const price2 = tier2 ? tier2.basePrice : (tableType === "PREMIUM" ? 1100 : 960);
+    const price3 = tier3 ? tier3.basePrice : (tableType === "PREMIUM" ? 500 : 400);
+    
+    originalPrice = hours * price1; // Assuming price1 is the base rate for 1 hour
+    
+    if (hours === 0) {
+      return { total: 0, originalPrice: 0, discount: 0, discountPercent: 0, effectiveRate: 0 };
+    }
+    
+    if (hours === 1) {
+      total = price1;
+    } else if (hours === 2) {
+      total = price2;
+    } else {
+      total = price2 + (hours - 2) * price3;
+    }
+    
+    const discount = originalPrice - total;
+    const discountPercent = originalPrice > 0 ? (discount / originalPrice) * 100 : 0;
+    const effectiveRate = hours > 0 ? total / hours : 0;
+    
+    return { total, originalPrice, discount, discountPercent, effectiveRate };
+  };
+
   // FETCH TABLES
   const fetchTables = async () => {
     try {
@@ -87,7 +112,6 @@ const BookingPage = () => {
     fetchTables();
   }, [formData.bookingDate]);
 
-<<<<<<< HEAD
   // Prevent background scroll when modal is open
   useEffect(() => {
     if (open || detailsOpen) {
@@ -100,8 +124,6 @@ const BookingPage = () => {
     };
   }, [open, detailsOpen]);
 
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
   // FILTER TABLES
   const filteredTables = useMemo(() => {
     return tables.filter(
@@ -140,23 +162,24 @@ const BookingPage = () => {
 
   // VALIDATION
   const validateForm = () => {
-    if (!formData.guestName.trim()) {
+    const trimmedName = formData.guestName.trim();
+    const trimmedPhone = formData.guestPhone.trim();
+    const trimmedEmail = formData.guestEmail.trim();
+
+    if (!trimmedName) {
       setError("Name is required");
       return false;
     }
 
-<<<<<<< HEAD
     const nameRegex = /^[a-zA-Z\s]+$/;
-    if (!nameRegex.test(formData.guestName)) {
+    if (!nameRegex.test(trimmedName)) {
       setError("Name must contain only letters and spaces");
       return false;
     }
 
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
     const phoneRegex = /^[0-9]{10}$/;
 
-    if (!phoneRegex.test(formData.guestPhone)) {
+    if (!phoneRegex.test(trimmedPhone)) {
       setError(
         "Phone number must be exactly 10 digits"
       );
@@ -166,7 +189,7 @@ const BookingPage = () => {
     const emailRegex =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(formData.guestEmail)) {
+    if (!emailRegex.test(trimmedEmail)) {
       setError("Enter a valid email");
       return false;
     }
@@ -181,22 +204,19 @@ const BookingPage = () => {
       return false;
     }
 
-    if (!formData.startTime) {
-      setError("Please select start time");
+    if (formData.selectedSlots.length === 0) {
+      setError("Please select at least one time slot");
       return false;
     }
 
-<<<<<<< HEAD
     const now = new Date();
-    const selectedDateTime = new Date(`${formData.bookingDate}T${formData.startTime}`);
+    const selectedDateTime = new Date(`${formData.bookingDate}T${formData.selectedSlots[0]}`);
    
     if (selectedDateTime < now) {
       setError("Cannot book a time slot in the past. Please choose a future time.");
       return false;
     }
 
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
     return true;
   };
 
@@ -239,17 +259,17 @@ const BookingPage = () => {
       const response = await initiateBooking({
         tableId: Number(formData.tableId),
 
-        tierId: Number(formData.tierId),
+        hours: formData.selectedSlots.length,
 
-        guestName: formData.guestName,
+        guestName: formData.guestName.trim(),
 
-        guestEmail: formData.guestEmail,
+        guestEmail: formData.guestEmail.trim(),
 
-        guestPhone: formData.guestPhone,
+        guestPhone: formData.guestPhone.trim(),
 
         bookingDate: formData.bookingDate,
 
-        startTime: formData.startTime,
+        startTime: formData.selectedSlots[0],
       });
 
       // RAZORPAY
@@ -281,7 +301,6 @@ const BookingPage = () => {
                 paymentResponse.razorpay_signature,
             });
 
-<<<<<<< HEAD
             setPaymentDetails({
               txnId: paymentResponse.razorpay_payment_id,
               amount: response.amount,
@@ -289,21 +308,8 @@ const BookingPage = () => {
 
             setSuccess(true);
 
-            // Clear form data after success
-            setFormData({
-              tableId: "",
-              tierId: "",
-              guestName: "",
-              guestEmail: "",
-              guestPhone: "",
-              bookingDate: new Date().toISOString().split("T")[0],
-              startTime: "",
-            });
+            // Form data will be cleared when closing the modal
 
-=======
-            setSuccess(true);
-
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
             await fetchTables();
 
           } catch (err) {
@@ -338,12 +344,8 @@ const BookingPage = () => {
 
       setError(
         err.response?.data?.message ||
-<<<<<<< HEAD
           (typeof err.response?.data === 'string' ? err.response.data : null) ||
           "Booking failed. This time slot might already be reserved."
-=======
-          "Booking failed"
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
       );
 
     } finally {
@@ -352,7 +354,6 @@ const BookingPage = () => {
   };
 
   return (
-<<<<<<< HEAD
     <div className="bg-background min-h-screen text-white relative overflow-hidden">
 
       {/* Cinematic Background Overlay */}
@@ -371,34 +372,10 @@ const BookingPage = () => {
           </h1>
           <p className="text-muted-foreground font-light text-md max-w-xl mx-auto leading-relaxed">
             Choose your table grade and preferred session duration. Elevate your game in our premium sanctuary.
-=======
-    <div className="bg-black">
-
-      {/* WATERMARK */}
-      <img
-        src={logo}
-        className="fixed opacity-5 w-[900px] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0"
-      />
-
-      <div className="bg-black text-white min-h-screen py-24 px-6">
-
-        {/* HEADER */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-semibold mb-6">
-            Book a Table
-          </h1>
-
-          <div className="w-20 h-[2px] bg-green-500 mx-auto mb-6" />
-
-          <p className="text-gray-500 max-w-xl mx-auto text-xl">
-            Choose your table type and preferred
-            session duration.
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
           </p>
         </div>
 
         {/* TOGGLE */}
-<<<<<<< HEAD
         <div className="flex justify-center mb-12">
           <div className="bg-card/50 backdrop-blur-sm border border-white/5 flex rounded-full overflow-hidden p-1">
             <button
@@ -407,48 +384,26 @@ const BookingPage = () => {
                 type === "premium"
                   ? "bg-accent text-background"
                   : "text-muted-foreground hover:text-white"
-=======
-        <div className="flex justify-center mb-16">
-          <div className="bg-[#111] rounded-xl p-1 border border-gray-800 flex text-2xl">
-
-            <button
-              onClick={() => setType("premium")}
-              className={`px-6 py-2 rounded-lg transition ${
-                type === "premium"
-                  ? "bg-green-500 text-black"
-                  : "text-gray-400"
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
               }`}
             >
               Premium Tables ({premiumCount})
             </button>
-<<<<<<< HEAD
             <button
               onClick={() => setType("regular")}
               className={`px-8 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 ${
                 type === "regular"
                   ? "bg-accent text-background"
                   : "text-muted-foreground hover:text-white"
-=======
-
-            <button
-              onClick={() => setType("regular")}
-              className={`px-6 py-2 rounded-lg transition ${
-                type === "regular"
-                  ? "bg-green-500 text-black"
-                  : "text-gray-400"
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
               }`}
             >
               Regular Tables ({regularCount})
             </button>
-<<<<<<< HEAD
           </div>
         </div>
 
      {/* TABLES GRID */}
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-  {filteredTables.map((table) => {
+  {filteredTables.map((table, index) => {
     const isSelected = selected?.table?.id === table.id;
 
     return (
@@ -525,104 +480,52 @@ const BookingPage = () => {
             </p>
           </div>
 
-          {/* TIERS */}
-          <div className="space-y-3 mb-7">
-            {table.availableTiers
-              ?.sort((a, b) => a.hours - b.hours)
-              .map((tier) => {
-                const total =
-                  tier.basePrice *
-                  (1 - tier.discountPercentage / 100);
-
-                const active =
-                  selected?.id === tier.id &&
-                  selected?.table?.id === table.id;
-
-                return (
-                  <button
-                    key={tier.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-
-                      setSelected({
-                        ...tier,
-                        total,
-                        table,
-                      });
-
-                      setFormData((prev) => ({
-                        ...prev,
-                        tableId: table.id,
-                        tierId: tier.id,
-                      }));
-                    }}
-                    className={`w-full rounded-xl border p-4 text-left transition-all duration-300
-                      
-                      ${
-                        active
-                          ? "border-accent bg-accent/10 shadow-[0_0_25px_rgba(197,160,89,0.15)] scale-[1.02]"
-                          : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.05]"
-                      }
-                    `}
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-sm font-semibold text-white">
-                          {tier.hours} Hour Session
-                        </p>
-
-                        <span className="text-[10px] uppercase tracking-widest text-accent font-bold">
-                          {tier.discountPercentage}% OFF
-                        </span>
-                      </div>
-
-                      <div className="text-right">
-                        <p className="text-xs line-through text-white/40">
-                          ₹{tier.basePrice}
-                        </p>
-
-                        <p className="text-xl font-bold text-accent">
-                          ₹{total.toFixed(0)}
-                        </p>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-          </div>
+          {/* PRICE LIST */}
+          {(() => {
+            const tiers = table.availableTiers || [];
+            const tier1 = tiers.find(t => t.hours === 1)?.basePrice || (table.tableType === "PREMIUM" ? 600 : 480);
+            const tier2 = tiers.find(t => t.hours === 2)?.basePrice || (table.tableType === "PREMIUM" ? 1100 : 960);
+            const tier3 = tiers.find(t => t.hours === 3)?.basePrice || (table.tableType === "PREMIUM" ? 500 : 400);
+            
+            return (
+              <div className="mb-5 bg-white/[0.03] p-3 rounded-lg border border-white/5 text-xs space-y-1">
+                {index === 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">1 Hour</span>
+                    <span className="text-white font-bold">₹{tier1}</span>
+                  </div>
+                )}
+                {index === 1 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">2 Hours</span>
+                    <span className="text-white font-bold">₹{tier2}</span>
+                  </div>
+                )}
+                {index >= 2 && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">3+ Hours</span>
+                    <span className="text-accent font-bold">₹{tier3}/hr</span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* BUTTON */}
           <button
             onClick={(e) => {
               e.stopPropagation();
-
-              const activeTier =
-                selected?.table?.id === table.id
-                  ? selected
-                  : table.availableTiers?.sort(
-                      (a, b) => a.hours - b.hours
-                    )[0];
-
-              if (activeTier) {
-                const total =
-                  activeTier.basePrice *
-                  (1 -
-                    activeTier.discountPercentage / 100);
-
-                setSelected({
-                  ...activeTier,
-                  total,
-                  table,
-                });
-
-                setFormData((prev) => ({
-                  ...prev,
-                  tableId: table.id,
-                  tierId: activeTier.id,
-                }));
-
-                setOpen(true);
-              }
+              setFormData({
+                tableId: table.id,
+                hours: 1,
+                guestName: "",
+                guestEmail: "",
+                guestPhone: "",
+                bookingDate: new Date().toISOString().split("T")[0],
+                startTime: "",
+                selectedSlots: [],
+              });
+              setOpen(true);
             }}
             className="w-full text-xs font-bold uppercase tracking-widest py-2.5 bg-transparent border border-accent text-accent hover:bg-accent hover:text-background transition-all duration-300 rounded-lg"
           >
@@ -636,10 +539,11 @@ const BookingPage = () => {
 
         {/* BOOKING MODAL */}
         {open && (
-          <div
-            className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-50 px-4"
+          <div  
+  className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-start justify-center z-50 px-4 pt-28 sm:pt-32 overflow-y-auto"
             onClick={() => setOpen(false)}
           >
+            
             <div
               className="bg-card p-8 max-w-4xl w-full border border-white/10"
               onClick={(e) => e.stopPropagation()}
@@ -652,138 +556,33 @@ const BookingPage = () => {
                   <h2 className="font-heading text-2xl font-bold text-white mb-2">Booking Confirmed</h2>
                   <p className="text-muted-foreground text-sm font-light mb-6">Your table has been reserved successfully.</p>
                  
-                  {paymentDetails && (
-                    <div className="bg-background/50 p-6 mb-6 text-left space-y-3 border border-white/5 text-sm">
-                      <p><span className="text-muted-foreground">Guest Name:</span> <span className="text-white">{formData.guestName}</span></p>
-                      <p><span className="text-muted-foreground">Table:</span> <span className="text-white">{selected?.table?.tableName}</span></p>
-                      <hr className="border-white/5" />
-                      <p><span className="text-muted-foreground">Txn ID:</span> <span className="text-white font-mono text-xs">{paymentDetails.txnId}</span></p>
-                      <p><span className="text-muted-foreground">Amount Paid:</span> <span className="text-accent font-bold">₹{paymentDetails.amount}</span></p>
-                    </div>
-                  )}
-=======
-
-          </div>
-        </div>
-
-        {/* TABLES */}
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
-
-          {filteredTables.map((table) => (
-            <div
-              key={table.id}
-              className="bg-[#111]/70 backdrop-blur-sm p-8 rounded-2xl border border-gray-800"
-            >
-
-              <h2 className="text-3xl font-semibold mb-2">
-                {table.tableName}
-              </h2>
-
-              <p className="text-gray-500 mb-8">
-                {table.tableType}
-              </p>
-
-              {/* TIERS */}
-              <div className="space-y-4">
-
-                {table.availableTiers
-                  ?.sort((a, b) => a.hours - b.hours)
-                  .map((tier) => {
-
-                    const total =
-                      tier.basePrice *
-                      (1 -
-                        tier.discountPercentage / 100);
-
-                    return (
-                      <button
-                        key={tier.id}
-                        onClick={() => {
-                          setSelected({
-                            ...tier,
-                            total,
-                            table,
-                          });
-
-                          setFormData((prev) => ({
-                            ...prev,
-                            tableId: table.id,
-                            tierId: tier.id,
-                          }));
-
-                          setOpen(true);
-                        }}
-                        className="w-full border border-gray-700 rounded-xl p-4 text-left hover:border-green-500 transition"
-                      >
-
-                        <div className="flex justify-between items-center">
-
-                          <div>
-                            <p className="text-xl">
-                              {tier.hours} Hour
-                            </p>
-
-                            <p className="text-gray-500">
-                              {tier.discountPercentage}% OFF
-                            </p>
-                          </div>
-
-                          <div className="text-right">
-                            <p className="text-2xl font-semibold text-green-500">
-                              ₹{total.toFixed(0)}
-                            </p>
-                          </div>
-
-                        </div>
-                      </button>
-                    );
-                  })}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* MODAL */}
-        {open && (
-          <div
-            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 px-4"
-            onClick={() => setOpen(false)}
-          >
-
-            <div
-              className="bg-[#111] p-8 rounded-2xl max-w-md w-full border border-gray-800"
-              onClick={(e) => e.stopPropagation()}
-            >
-
-              {success ? (
-                <div className="text-center">
-
-                  <h2 className="text-4xl text-green-500 mb-4">
-                    Booking Confirmed
-                  </h2>
-
-                  <p className="text-gray-400 mb-6">
-                    Your table has been reserved successfully.
-                  </p>
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
+                  <div className="bg-background/50 p-6 mb-6 text-left space-y-3 border border-green-500/50 rounded-xl text-sm">
+                    <h3 className="text-green-500 font-bold text-center mb-2">BOOKED CONFIRMED</h3>
+                    <p><span className="text-muted-foreground">Name:</span> <span className="text-white">{formData.guestName.trim()}</span></p>
+                    <p><span className="text-muted-foreground">Email:</span> <span className="text-white">{formData.guestEmail.trim()}</span></p>
+                    <p><span className="text-muted-foreground">Phone:</span> <span className="text-white">{formData.guestPhone.trim()}</span></p>
+                    <p><span className="text-muted-foreground">Hours Booked:</span> <span className="text-white">{formData.selectedSlots?.length || 0} Hours</span></p>
+                    <p><span className="text-muted-foreground">Table Name:</span> <span className="text-white">{tables.find(t => t.id == formData.tableId)?.tableName || "N/A"}</span></p>
+                    <p><span className="text-muted-foreground">Table Type:</span> <span className="text-white">{tables.find(t => t.id == formData.tableId)?.tableType || "N/A"}</span></p>
+                    {paymentDetails && (
+                      <>
+                        <hr className="border-white/5" />
+                        <p><span className="text-muted-foreground">Txn ID:</span> <span className="text-white font-mono text-xs">{paymentDetails.txnId}</span></p>
+                        <p><span className="text-muted-foreground">Amount Paid:</span> <span className="text-accent font-bold">₹{paymentDetails.amount}</span></p>
+                      </>
+                    )}
+                  </div>
 
                   <button
                     onClick={() => {
                       setOpen(false);
-<<<<<<< HEAD
                       setSuccess(false);
-=======
-
-                      setSuccess(false);
-
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                       setFormData({
                         tableId: "",
                         tierId: "",
                         guestName: "",
                         guestEmail: "",
                         guestPhone: "",
-<<<<<<< HEAD
                         bookingDate: new Date().toISOString().split("T")[0],
                         startTime: "",
                       });
@@ -795,7 +594,7 @@ const BookingPage = () => {
                 </div>
               ) : (
                 <>
-                  <h2 className="font-heading text-2xl font-bold mb-4 text-center text-accent italic uppercase">Snooker Table Booking</h2>
+                  <h2 className="font-heading text-2xl font-bold mb-4 text-center text-accent ">Snooker Table Booking</h2>
                  
                   {/* STEPS INDICATOR */}
                   <div className="flex justify-center items-center gap-2 mb-6 text-[8px] uppercase font-bold tracking-widest text-muted-foreground">
@@ -985,7 +784,7 @@ const BookingPage = () => {
                               <div className="grid grid-cols-4 gap-2">
                                 {timeSlots.map((slot) => {
                                   const occupied = isSlotOccupied(slot);
-                                  const isSelected = formData.startTime === slot;
+                                  const isSelected = formData.selectedSlots.includes(slot);
                                  
                                   const hour = parseInt(slot.split(":")[0]);
                                  
@@ -1024,7 +823,12 @@ const BookingPage = () => {
                                       type="button"
                                       disabled={isDisabled}
                                       title={tooltip}
-                                      onClick={() => setFormData({ ...formData, startTime: slot })}
+                                      onClick={() => {
+                                        const newSlots = formData.selectedSlots.includes(slot)
+                                          ? formData.selectedSlots.filter(s => s !== slot)
+                                          : [...formData.selectedSlots, slot].sort();
+                                        setFormData({ ...formData, selectedSlots: newSlots });
+                                      }}
                                       className={`p-1.5 text-[9px] font-bold rounded-full border transition-all ${buttonStyle}`}
                                     >
                                       {displayTime}
@@ -1060,7 +864,7 @@ const BookingPage = () => {
                                     // Also update selected table in state
                                     const defaultTier = table.availableTiers?.sort((a, b) => a.hours - b.hours)[0];
                                     if (defaultTier) {
-                                      const total = defaultTier.basePrice * (1 - defaultTier.discountPercentage / 100);
+                                      const { total } = calculatePrice(table, defaultTier.hours);
                                       setSelected({ ...defaultTier, total, table: table });
                                     }
                                   }}
@@ -1097,16 +901,22 @@ const BookingPage = () => {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">TIME:</span>
-                            <span>{formData.startTime || "Select Time"}</span>
+                            <span>{formData.selectedSlots[0] || "Select Time"}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-muted-foreground">DURATION:</span>
-                            <span>{selected?.hours} Hours</span>
+                            <span>{formData.selectedSlots.length} Hours</span>
                           </div>
-                          <div className="border-t border-dashed border-white/10 my-2 pt-2 flex justify-between font-bold text-accent text-sm">
-                            <span>TOTAL:</span>
-                            <span>₹{selected?.total?.toFixed(0)}</span>
-                          </div>
+                          {(() => {
+                            const currentTable = tables.find(t => t.id == formData.tableId);
+                            const { total } = currentTable ? calculatePrice(currentTable, formData.selectedSlots.length) : { total: 0 };
+                            return (
+                              <div className="border-t border-dashed border-white/10 my-2 pt-2 flex justify-between font-bold text-accent text-sm">
+                                <span>TOTAL:</span>
+                                <span>₹{total.toFixed(0)}</span>
+                              </div>
+                            );
+                          })()}
                          
                           {/* Fake Barcode */}
                           <div className="flex justify-center gap-0.5 mt-4 opacity-30">
@@ -1140,128 +950,6 @@ const BookingPage = () => {
                   <button
                     onClick={() => setOpen(false)}
                     className="mt-4 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-accent w-full text-center transition-all"
-=======
-                        bookingDate:
-                          new Date()
-                            .toISOString()
-                            .split("T")[0],
-                        startTime: "",
-                      });
-                    }}
-                    className="w-full py-3 bg-green-500 text-black rounded-xl font-semibold"
-                  >
-                    Close
-                  </button>
-
-                </div>
-              ) : (
-                <>
-                  <h2 className="text-3xl mb-4 text-center">
-                    Complete Booking
-                  </h2>
-
-                  {error && (
-                    <div className="mb-4 bg-red-500/10 border border-red-500 text-red-400 text-sm rounded-lg p-3 text-center">
-                      {error}
-                    </div>
-                  )}
-
-                  <p className="text-gray-400 text-xl text-center mb-6">
-                    {selected?.table?.tableName} •{" "}
-                    {selected?.hours} hr • ₹
-                    {selected?.total?.toFixed(0)}
-                  </p>
-
-                  {/* OCCUPIED */}
-                  {selected?.table?.occupiedRanges
-                    ?.length > 0 && (
-                    <div className="mb-6">
-                      <p className="text-red-400 mb-2">
-                        Occupied Slots
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {selected.table.occupiedRanges.map(
-                          (range, i) => (
-                            <span
-                              key={i}
-                              className="bg-red-500/10 border border-red-500 text-red-400 px-3 py-1 rounded-full text-sm"
-                            >
-                              {range}
-                            </span>
-                          )
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  <form className="space-y-4">
-
-                    <input
-                      type="text"
-                      name="guestName"
-                      placeholder="Your Name"
-                      value={formData.guestName}
-                      onChange={handleChange}
-                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-                    />
-
-                    <input
-                      type="tel"
-                      name="guestPhone"
-                      placeholder="Phone Number"
-                      value={formData.guestPhone}
-                      onChange={handleChange}
-                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-                    />
-
-                    <input
-                      type="email"
-                      name="guestEmail"
-                      placeholder="Email Address"
-                      value={formData.guestEmail}
-                      onChange={handleChange}
-                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-                    />
-
-                    <input
-                      type="date"
-                      name="bookingDate"
-                      min={
-                        new Date()
-                          .toISOString()
-                          .split("T")[0]
-                      }
-                      value={formData.bookingDate}
-                      onChange={handleChange}
-                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-                    />
-
-                    <input
-                      type="time"
-                      name="startTime"
-                      value={formData.startTime}
-                      onChange={handleChange}
-                      className="w-full p-3 text-xl rounded-lg bg-black border border-gray-700 text-white outline-none focus:border-green-500"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={handleSubmit}
-                      disabled={loading}
-                      className="w-full py-3 text-xl bg-green-500 text-black rounded-xl font-semibold hover:bg-green-600 transition disabled:opacity-50"
-                    >
-                      {loading
-                        ? "Processing..."
-                        : "Confirm Booking"}
-                    </button>
-
-                  </form>
-
-                  <button
-                    onClick={() => setOpen(false)}
-                    className="mt-4 text-xl text-gray-400 hover:text-white w-full text-center"
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
                   >
                     Cancel
                   </button>
@@ -1270,7 +958,6 @@ const BookingPage = () => {
             </div>
           </div>
         )}
-<<<<<<< HEAD
 
         {/* TABLE DETAILS MODAL */}
         {detailsOpen && detailsTable && (
@@ -1340,7 +1027,7 @@ const BookingPage = () => {
                   onClick={() => {
                     const defaultTier = detailsTable.availableTiers?.sort((a, b) => a.hours - b.hours)[0];
                     if (defaultTier) {
-                      const total = defaultTier.basePrice * (1 - defaultTier.discountPercentage / 100);
+                      const { total } = calculatePrice(detailsTable, defaultTier.hours);
                       setSelected({ ...defaultTier, total, table: detailsTable });
                       setFormData((prev) => ({ ...prev, tableId: detailsTable.id, tierId: defaultTier.id }));
                       setOpen(true);
@@ -1355,8 +1042,6 @@ const BookingPage = () => {
             </div>
           </div>
         )}
-=======
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
       </div>
     </div>
   );

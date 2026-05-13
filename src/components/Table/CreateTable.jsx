@@ -8,6 +8,7 @@ const CreateTable = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const [formData, setFormData] = useState({
     tableName: "",
@@ -26,33 +27,46 @@ const CreateTable = () => {
 
   const handleSubmit = async (e, images) => {
     e.preventDefault();
+    
+    setError(""); // Clear previous errors
 
+    if (!formData.tableName.trim()) {
+      setError("Please enter a table name. All fields are mandatory.");
+      return;
+    }
+    
+    if (!formData.availableTierIds || formData.availableTierIds.length === 0) {
+      setError("Please select at least one pricing tier. All fields are mandatory.");
+      return;
+    }
+    
+    if (!images || images.length === 0) {
+      setError("Please upload at least one image. All fields are mandatory.");
+      return;
+    }
+    
     try {
       setLoading(true);
-
+      
       const form = new FormData();
-
-<<<<<<< HEAD
+      
       form.append("tableName", formData.tableName);
       form.append("tableType", formData.tableType.toUpperCase());
       
       if (formData.availableTierIds) {
         formData.availableTierIds.forEach(id => form.append("tierIds", id));
       }
-=======
-      form.append("tableData", JSON.stringify(formData));
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
-
+      
       images.forEach((img) => {
         form.append("images", img);
       });
-
+      
       await createTable(form);
-
+      
       navigate("/admin/tables");
     } catch (err) {
       console.error(err);
-      alert("Failed to create table");
+      setError(err.response?.data || "Failed to create table");
     } finally {
       setLoading(false);
     }
@@ -65,6 +79,7 @@ const CreateTable = () => {
       handleSubmit={handleSubmit}
       loading={loading}
       buttonText="Create Table"
+      error={error}
     />
   );
 };

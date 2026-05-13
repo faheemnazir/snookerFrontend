@@ -2,13 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
-/* Base */
+
 body {
   @apply font-sans bg-background text-on-surface antialiased;
 }
 
-/* Headings */
 h1, h2, h3, h4, h5, h6 {
   @apply font-heading tracking-tight;
 }
@@ -24,7 +22,6 @@ p {
 .btn-primary {
   @apply px-10 py-4 bg-accent text-background text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:shadow-[0_0_25px_rgba(197,160,89,0.35)];
 }
-
 .btn-secondary {
   @apply px-10 py-4 border border-white/20 text-white text-xs font-bold uppercase tracking-widest transition-all duration-300 hover:bg-white hover:text-background;
 }
@@ -37,11 +34,11 @@ p {
 
 
 
-/* Smooth UI feel */
+
 * {
   @apply transition-colors duration-200;
 }
-=======
+
 
 body {
   font-family: 'Rajdhani', sans-serif;
@@ -50,4 +47,3 @@ body {
 h1, h2, h3, h4 {
   font-family: 'Orbitron', sans-serif;
 }
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389

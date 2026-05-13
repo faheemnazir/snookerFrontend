@@ -7,7 +7,6 @@ const TablesList = () => {
   const [tables, setTables] = useState([]);
   const navigate = useNavigate();
 
-<<<<<<< HEAD
   useEffect(() => {
     const fetchTables = async () => {
       try {
@@ -113,81 +112,6 @@ const TablesList = () => {
               </div>
             ))
           )}
-=======
-useEffect(() => {
-  const fetchTables = async () => {
-    try {
-      const res = await getAllTables("REGULAR");
-      setTables(res);
-    } catch (err) {
-      console.error("FETCH ERROR:", err);
-
-      alert(
-        err.response?.data ||
-        err.message ||
-        "Failed to load tables"
-      );
-    }
-  };
-
-  fetchTables();
-}, []);
-
-  return (
-    <div className="space-y-6">
-
-      <SectionCard
-        title="Tables Overview"
-        description="View and manage all snooker tables"
-      >
-        <div className="grid md:grid-cols-3 gap-6">
-
-          {tables.map((t) => (
-            <div
-              key={t.id}
-              className="bg-[#0a0a0a] border border-gray-800 rounded-xl p-4 space-y-3"
-            >
-              <h3 className="text-lg">{t.tableName}</h3>
-
-              <p className="text-gray-400 text-sm">
-                {t.tableType}
-              </p>
-
-              <div className="flex gap-2">
-                <button
-                  onClick={() => navigate(`/admin/update/${t.id}`)}
-                  className="flex-1 bg-green-500 text-black py-2 rounded-xl text-sm"
-                >
-                  Edit
-                </button>
-
-                <button
-                  onClick={async () => {
-                    try {
-                      await deleteTable(t.id);
-
-                      // ✅ remove from UI instantly
-                      setTables((prev) => prev.filter((table) => table.id !== t.id));
-
-                    } catch (err) {
-                      console.error("DELETE ERROR:", err);
-
-                      alert(
-                        err.response?.data ||
-                        err.message ||
-                        "Failed to delete table"
-                      );
-                    }
-                  }}
-                  className="flex-1 border border-gray-700 py-2 rounded-xl text-sm"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))}
-
->>>>>>> 3cd098a85ed3a89f8ef179005bbb4df8d5e35389
         </div>
       </SectionCard>
 
